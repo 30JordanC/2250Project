@@ -4,16 +4,19 @@ public class Dog : Enemy
 {
     [Header("Dog Specific")]
     public AudioSource barkSound;
+    
 
     protected override void Update()
     {
         base.Update();
+        
 
-        if (mode == "Chasing")
+        if (currentState == "chasing")
         {
             Bark();
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
 
-            float distance = Vector3.Distance(transform.position, player.position);
+            float distance = Vector3.Distance(transform.position, player.transform.position);
 
             if (distance < 1.5f)
             {
@@ -34,12 +37,13 @@ public class Dog : Enemy
 
     public override void Move()
     {
-        if (mode == "Chasing")
+        if (currentState == "chasing")
         {
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
             // Dogs are faster than base enemy
             transform.position = Vector3.MoveTowards(
                 transform.position,
-                player.position,
+                player.transform.position,
                 (speed + 1.5f) * Time.deltaTime
             );
         }
@@ -56,22 +60,24 @@ public class Dog : Enemy
     }
     public override void DetectPlayer()
     {
-        float distance = Vector3.Distance(transform.position, player.position);
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+
+        float distance = Vector3.Distance(transform.position, player.transform.position);
 
         if (distance <= detectionRange)
         {
             RaycastHit hit;
 
-            if (Physics.Raycast(transform.position, (player.position - transform.position).normalized, out hit, detectionRange))
+            if (Physics.Raycast(transform.position, (player.transform.position - transform.position).normalized, out hit, detectionRange))
             {
                 if (hit.collider.CompareTag("Player"))
                 {
-                    mode = "Chasing";
+                    currentState = "Chasing";
                     return;
                 }
             }
         }
 
-        mode = "Idle";
+        currentState = "Idle";
     }
 }
