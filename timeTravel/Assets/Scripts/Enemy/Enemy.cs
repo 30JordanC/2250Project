@@ -2,70 +2,94 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [Header("Base Enemy Stats")]
+
+    //properties
+
     public int health = 100;
-    public float detectionRange = 5f;
+    public float detectionRange = 10f;
     public int damage = 10;
-    public float speed = 2f;
+    public float speed = 3f;
     public float attackInterval = 2f;
+    public Vector3 spawnPosition;
 
-    protected Transform player;
+    protected string currentState = "idle";
+    protected Transform target;
+
+    //used to make sure there is actually a cooldown between attacks, and not either attacking every frame, or crashing
     protected float lastAttackTime;
-    protected string mode = "Idle";
 
-    protected virtual void Start()
+    //methods
+
+    //set spawn position at start only
+    void Start()
     {
-        GameObject p = GameObject.FindGameObjectWithTag("Player");
-        if (p != null)
-            player = p.transform;
+        transform.position = spawnPosition;
     }
 
     protected virtual void Update()
     {
-        if (player == null) return;
-
         DetectPlayer();
-        Move();
+
+        switch (currentState)
+        {
+            case "chasing":
+                Move();
+                break;
+
+            case "attacking":
+                Attack();
+                break;
+        }
     }
 
-    // 👁 Detect Player
     public virtual void DetectPlayer()
     {
-        float distance = Vector3.Distance(transform.position, player.position);
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        
+        if ( player == null) return;
+
+        float distance = Vector3.Distance(transform.position, player.transform.position);
 
         if (distance <= detectionRange)
         {
-            mode = "Chasing";
-        }
-        else
-        {
-            mode = "Idle";
+            target = player.transform;
+            currentState = "idle";
         }
     }
 
-    // 🚶 Movement (basic)
     public virtual void Move()
     {
-        if (mode == "Chasing")
+        if (target == null) return;
+
+        transform.position = Vector3.MoveTowards(
+            transform.position,
+            target.position,
+            speed * Time.deltaTime
+        );
+
+        float distance = Vector3.Distance(transform.position, target.position);
+
+        if (distance <= 2f) // attack range
         {
-            transform.position = Vector3.MoveTowards(
-                transform.position,
-                player.position,
-                speed * Time.deltaTime
-            );
+            currentState = "attacking";
         }
     }
 
-    // ⚔ Attack
     public virtual void Attack()
     {
-        if (Time.time - lastAttackTime >= attackInterval)
+        if (target == null) return;
+
+        if (Time.time >= lastAttackTime + attackInterval)
         {
+            IDamageable dmg = target.GetComponent<IDamageable>();
+
+            if (dmg != null)
+            {
+                dmg.TakeDamage(damage);
+            }
+
             lastAttackTime = Time.time;
-
-            Debug.Log("Enemy attacks player!");
-
-            // You can later hook into Player health here
         }
     }
+
 }
