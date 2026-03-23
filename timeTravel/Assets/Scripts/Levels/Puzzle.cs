@@ -10,6 +10,10 @@ public class Puzzle : MonoBehaviour
         Debug.Log("Puzzle solved!");
 
         // Notify level
-        FindObjectOfType<EgyptLevel>().OnPuzzleSolved();
+        var egyptLevel = Object.FindFirstObjectByType<EgyptLevel>();
+        if (egyptLevel != null)
+        {
+            egyptLevel.OnPuzzleSolved();
+        }
     }
 }
