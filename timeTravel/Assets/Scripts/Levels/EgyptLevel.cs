@@ -15,6 +15,15 @@ public class EgyptLevel : Level
     public Transform puzzleSpawnPoint;
     private bool puzzleSolved = false;
     private GameObject staffInstance;
+    
+    public Door door;
+
+    public void OnPuzzleSolved()
+    {
+        puzzleSolved = true;
+        Debug.Log("Final chamber unlocked!");
+        door.OpenDoor();
+    }
     public override void Initialize()
     {
         Debug.Log("Egypt Level initialized.");
@@ -57,11 +66,5 @@ public class EgyptLevel : Level
     {
         Debug.Log("Egypt Level completed!");
         GameControl.Instance.LoadNextLevel();
-    }
-    public void OnPuzzleSolved()
-    {
-        puzzleSolved = true;
-
-        Debug.Log("Final chamber unlocked!");
     }
 }
