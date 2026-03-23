@@ -62,6 +62,9 @@ public class EgyptLevel : Level
     {
         puzzleSolved = true;
 
-        Debug.Log("Final chamber unlocked!");
+        if (puzzleSolved)
+        {
+            Debug.Log("Final chamber unlocked!");
+        }
     }
 }
