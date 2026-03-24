@@ -22,27 +22,17 @@ public class FirstPersonCamera : MonoBehaviour
     {
         float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * sensitivyX;
         float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * sensitivityY;
-        
+
         yRotation += mouseX;
         xRotation -= mouseY;
-        
+
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
-        
-        
+
+
         transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
         orientation.rotation = Quaternion.Euler(0, yRotation, 0);
-
-        playerObject.rotation = Quaternion.Euler(0, yRotation + 180f, 0);
-
+        playerObject.rotation = orientation.rotation;
     }
 
-    void OnEnable()
-    {
-        SyncRotation();
-    }
 
-    void SyncRotation()
-    {
-        yRotation = orientation.eulerAngles.y;
-    }
 }

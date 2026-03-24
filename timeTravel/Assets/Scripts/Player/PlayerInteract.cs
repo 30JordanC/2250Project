@@ -15,6 +15,8 @@ public class PlayerInteract : MonoBehaviour
     private IInteractable currentInteractable;
 
     public TMPro.TMP_Text interactText;
+
+    public Animator animator;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -29,6 +31,8 @@ public class PlayerInteract : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E) && currentInteractable != null) 
         {
             currentInteractable.Interact();
+            
+            animator.SetTrigger("Interact");
         }
     }
 
