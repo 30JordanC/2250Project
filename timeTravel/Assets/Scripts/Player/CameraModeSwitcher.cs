@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class CameraModeSwitcher : MonoBehaviour
 {
-    public CinemachineFreeLook freeLookCamera;
+    public Camera thirdPersonCamera;
 
     public Camera firstPersonCamera;
     
@@ -33,7 +33,7 @@ public class CameraModeSwitcher : MonoBehaviour
 
     void SetFirstPerson()
     {
-        freeLookCamera.gameObject.SetActive(false);
+        thirdPersonCamera.gameObject.SetActive(false);
         firstPersonCamera.gameObject.SetActive(true);
 
     }
@@ -41,6 +41,6 @@ public class CameraModeSwitcher : MonoBehaviour
     void SetThirdPerson()
     {
         firstPersonCamera.gameObject.SetActive(false);
-        freeLookCamera.gameObject.SetActive(true);
+        thirdPersonCamera.gameObject.SetActive(true);
     }
 }

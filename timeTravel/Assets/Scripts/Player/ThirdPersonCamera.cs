@@ -33,7 +33,7 @@ public class ThirdPersonCamera : MonoBehaviour
         if (inputDirection != Vector3.zero)
         {
             Quaternion targetRotation = Quaternion.LookRotation(inputDirection.normalized, Vector3.up);
-            Quaternion modelOffset = Quaternion.Euler(0f, 180f, 0f);
+            Quaternion modelOffset = Quaternion.Euler(0f, 0f, 0f);
 
             playerObject.rotation = Quaternion.Slerp(
                 playerObject.rotation,
