@@ -6,7 +6,8 @@ public class Puzzle : MonoBehaviour
     public GameObject puzzleUI;
     public TMP_InputField answerInput;
     public int correctAnswer = 8;
-
+    public Door door;
+    
     public void SolvePuzzle()
     {
         isSolved = true;
@@ -16,6 +17,11 @@ public class Puzzle : MonoBehaviour
         if (level != null)
         {
             level.OnPuzzleSolved();
+        }
+
+        if (door != null)
+        {
+            door.OpenDoor();
         }
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
