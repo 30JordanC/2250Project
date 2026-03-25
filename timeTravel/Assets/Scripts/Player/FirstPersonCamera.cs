@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class FirstPersonCamera : MonoBehaviour
@@ -34,5 +35,8 @@ public class FirstPersonCamera : MonoBehaviour
         playerObject.rotation = orientation.rotation;
     }
 
-
+    private void OnEnable()
+    {
+        yRotation = playerObject.rotation.eulerAngles.y;
+    }
 }
