@@ -1,17 +1,18 @@
 using NUnit.Framework;
 using UnityEngine;
+using C_Scripts;
 
 public class CharacterManagerTests
 {
     private GameObject testObject;
-    private CharacterSelectManager manager;
+    private CharacterManager manager;
     private GameObject[] characterOptions;
 
     [SetUp]
     public void Setup()
     {
         testObject = new GameObject("TestObject");
-        manager = testObject.AddComponent<CharacterSelectManager>();
+        manager = testObject.AddComponent<CharacterManager>();
         
         characterOptions = new GameObject[3];
         for (int i = 0; i < 3; i++)
