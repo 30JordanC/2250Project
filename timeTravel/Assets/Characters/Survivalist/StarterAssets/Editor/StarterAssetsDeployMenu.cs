@@ -4,7 +4,7 @@ using UnityEngine;
 #if STARTER_ASSETS_PACKAGES_CHECKED && !UNITY_6000_0_OR_NEWER
 using Cinemachine;
 #elif STARTER_ASSETS_PACKAGES_CHECKED && UNITY_6000_0_OR_NEWER
-using Unity.Cinemachine;
+using Cinemachine;
 #endif
 
 namespace StarterAssets

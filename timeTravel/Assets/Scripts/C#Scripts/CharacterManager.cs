@@ -4,7 +4,7 @@ namespace C_Scripts
 {
     public class CharacterManager : MonoBehaviour
     {
-        [SerializeField] private GameObject[] characterOptions;
+        [SerializeField] public GameObject[] characterOptions;
         [SerializeField] private int currentIndex;
 
         public int CurrentIndex => currentIndex;
