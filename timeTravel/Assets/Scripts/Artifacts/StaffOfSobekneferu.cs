@@ -8,9 +8,9 @@ public class StaffOfSobekneferu : MonoBehaviour
         {
             Debug.Log("Staff collected!");
 
-            GameControl.Instance.currentLevel.EndLevel();
-
-            Destroy(gameObject);
+            //GameControl.Instance.currentLevel.EndLevel();
+            gameObject.SetActive(false);
+            //Destroy(gameObject);
         }
     }
 }
