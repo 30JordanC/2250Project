@@ -2,58 +2,60 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    public enum EnemyState { Idle, Chasing, Attacking }
 
-    //properties
-
+    [Header("Stats")]
     public int health = 100;
     public float detectionRange = 10f;
     public int damage = 10;
     public float speed = 3f;
+    public float attackRange = 2f;
     public float attackInterval = 2f;
-    public Vector3 spawnPosition;
 
-    protected string currentState = "idle";
+    protected EnemyState currentState = EnemyState.Idle;
     protected Transform target;
-
-    //used to make sure there is actually a cooldown between attacks, and not either attacking every frame, or crashing
     protected float lastAttackTime;
-
-    //methods
-
-    //set spawn position at start only
-    void Start()
-    {
-        transform.position = spawnPosition;
-    }
 
     protected virtual void Update()
     {
-        DetectPlayer();
+        UpdateState();
 
         switch (currentState)
         {
-            case "chasing":
+            case EnemyState.Chasing:
                 Move();
                 break;
 
-            case "attacking":
+            case EnemyState.Attacking:
                 Attack();
                 break;
         }
     }
 
-    public virtual void DetectPlayer()
+    void UpdateState()
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
-        
-        if ( player == null) return;
-
-        float distance = Vector3.Distance(transform.position, player.transform.position);
-
-        if (distance <= detectionRange)
+        if (player == null)
         {
-            target = player.transform;
-            currentState = "idle";
+            currentState = EnemyState.Idle;
+            return;
+        }
+
+        target = player.transform;
+
+        float distance = Vector3.Distance(transform.position, target.position);
+
+        if (distance <= attackRange)
+        {
+            currentState = EnemyState.Attacking;
+        }
+        else if (distance <= detectionRange)
+        {
+            currentState = EnemyState.Chasing;
+        }
+        else
+        {
+            currentState = EnemyState.Idle;
         }
     }
 
@@ -66,13 +68,6 @@ public class Enemy : MonoBehaviour
             target.position,
             speed * Time.deltaTime
         );
-
-        float distance = Vector3.Distance(transform.position, target.position);
-
-        if (distance <= 2f) // attack range
-        {
-            currentState = "attacking";
-        }
     }
 
     public virtual void Attack()
@@ -81,15 +76,17 @@ public class Enemy : MonoBehaviour
 
         if (Time.time >= lastAttackTime + attackInterval)
         {
-            IDamageable dmg = target.GetComponent<IDamageable>();
+            Debug.Log("ATTACK CALLED");
 
-            if (dmg != null)
+            Health health = target.GetComponent<Health>();
+
+            if (health != null)
             {
-                dmg.TakeDamage(damage);
+                health.TakeDamage((float)damage);
+                Debug.Log("Dealt damage to player!");
             }
 
             lastAttackTime = Time.time;
         }
     }
-
 }
