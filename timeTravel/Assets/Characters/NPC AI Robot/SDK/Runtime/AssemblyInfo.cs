@@ -1,5 +1,0 @@
-using System.Runtime.CompilerServices;
-
-[assembly: InternalsVisibleTo("Convai.Tests.EditMode")]
-[assembly: InternalsVisibleTo("Convai.Tests.PlayMode")]
-[assembly: InternalsVisibleTo("Convai.Modules.Vision")]
