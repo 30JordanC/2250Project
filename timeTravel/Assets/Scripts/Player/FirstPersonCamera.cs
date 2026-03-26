@@ -10,6 +10,8 @@ public class FirstPersonCamera : MonoBehaviour
     
     float xRotation;
     float yRotation;
+
+    public bool canLook = true;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -21,6 +23,7 @@ public class FirstPersonCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!canLook) return;
         float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * sensitivyX;
         float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * sensitivityY;
 

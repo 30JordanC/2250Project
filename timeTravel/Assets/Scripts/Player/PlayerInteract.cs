@@ -45,9 +45,17 @@ public class PlayerInteract : MonoBehaviour
 
         if (hits.Length > 0)
         {
-            interactText.gameObject.SetActive(true);
-            currentInteractable = hits[0].GetComponent<IInteractable>();
-            return;
+            IInteractable interactable = hits[0].GetComponent<IInteractable>();
+
+            if (interactable != null && interactable.CanInteract())
+            {
+                currentInteractable = interactable;
+
+                interactText.gameObject.SetActive(true);
+                interactText.text = interactable.GetInteractText();
+
+                return;
+            }
         }
         
         interactText.gameObject.SetActive(false);

@@ -8,6 +8,8 @@ public class CameraModeSwitcher : MonoBehaviour
     public Camera firstPersonCamera;
     
     private bool isFirstPerson;
+
+    public bool canLook = true;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -18,6 +20,7 @@ public class CameraModeSwitcher : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!canLook) return;
         if (Input.GetKeyDown(KeyCode.V)) 
         {
             isFirstPerson = !isFirstPerson;
