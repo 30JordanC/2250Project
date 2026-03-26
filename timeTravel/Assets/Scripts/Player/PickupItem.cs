@@ -18,4 +18,14 @@ public class PickupItem : MonoBehaviour, IInteractable
     {
         Destroy(gameObject);
     }
+
+    public bool CanInteract()
+    {
+        return true;
+    }
+
+    public string GetInteractText()
+    {
+        return "Press E to pick up";
+    }
 }

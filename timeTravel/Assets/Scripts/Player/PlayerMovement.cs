@@ -127,4 +127,13 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool("IsSprinting", isSprinting);
         animator.SetBool("IsGrounded", grounded);
     }
+    
+    public void StopMovement()
+    {
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
+        animator.SetFloat("Speed", 0f);
+        animator.SetBool("IsSprinting", false);
+    }
 }
