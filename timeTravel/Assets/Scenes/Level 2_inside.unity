@@ -13275,6 +13275,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e3fa8c516ecc43a0be18df3061193e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StaffOfSobekneferu
+  sceneToLoad: IntroScene
 --- !u!64 &1481817706
 MeshCollider:
   m_ObjectHideFlags: 0
