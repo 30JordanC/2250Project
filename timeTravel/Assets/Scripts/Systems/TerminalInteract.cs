@@ -79,6 +79,36 @@ public class TerminalInteract : MonoBehaviour, IInteractable
         CloseMenu();
         SceneTransitionManager.Instance.LoadScene("Level 1", "Level1Spawn");
     }
+    
+    public void GoToLevel2() 
+    {
+        CloseMenu();
+        SceneTransitionManager.Instance.LoadScene("Level 2_inside", "Level2Spawn");
+    }
+    
+    public void GoToLevel3() 
+    {
+        CloseMenu();
+        SceneTransitionManager.Instance.LoadScene("Level 3", "Level3Spawn");
+    }
+    
+    public void GoToLevel4() 
+    {
+        CloseMenu();
+        SceneTransitionManager.Instance.LoadScene("Level 4", "Level4Spawn");
+    }
+    
+    public void GoToLevel5() 
+    {
+        CloseMenu();
+        SceneTransitionManager.Instance.LoadScene("Level 5", "Level5Spawn");
+    }
+    
+    public void GoToLevel6() 
+    {
+        CloseMenu();
+        SceneTransitionManager.Instance.LoadScene("Level 6", "Level6Spawn");
+    }
 
 
 }
