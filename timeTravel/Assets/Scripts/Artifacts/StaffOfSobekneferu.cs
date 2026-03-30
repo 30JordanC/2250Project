@@ -1,16 +1,20 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class StaffOfSobekneferu : MonoBehaviour
 {
+    public string sceneToLoad; 
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
             Debug.Log("Staff collected!");
 
-            //GameControl.Instance.currentLevel.EndLevel();
             gameObject.SetActive(false);
-            //Destroy(gameObject);
+
+            // Load next scene
+            SceneManager.LoadScene(sceneToLoad);
         }
     }
 }
