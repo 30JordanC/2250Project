@@ -4823,6 +4823,7 @@ MonoBehaviour:
   sensitivityY: 400
   orientation: {fileID: 1190606009}
   playerObject: {fileID: 1922585467}
+  canLook: 1
 --- !u!114 &508708443
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9787,6 +9788,37 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 5374682559244950595, guid: 18c6e6fd7a0a0d246b705462d120d53a, type: 3}
+--- !u!1 &1155073226
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1155073227}
+  m_Layer: 0
+  m_Name: LevelManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1155073227
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1155073226}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -20.53176, y: 2.81235, z: -54.61548}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1166105562
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9988,6 +10020,7 @@ MonoBehaviour:
   playerObject: {fileID: 1922585467}
   rb: {fileID: 1496367292}
   rotationSpeed: 7
+  canLook: 1
 --- !u!114 &1190070353
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11136,6 +11169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CameraModeSwitcher
   thirdPersonCamera: {fileID: 1190070356}
   firstPersonCamera: {fileID: 508708441}
+  canLook: 1
 --- !u!114 &1267365602
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18839,3 +18873,4 @@ SceneRoots:
   - {fileID: 1132931129}
   - {fileID: 397276983}
   - {fileID: 398416921}
+  - {fileID: 1155073227}
