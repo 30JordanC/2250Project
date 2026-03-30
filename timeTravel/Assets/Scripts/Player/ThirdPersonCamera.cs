@@ -11,6 +11,8 @@ public class ThirdPersonCamera : MonoBehaviour
     public Rigidbody rb;
 
     public float rotationSpeed;
+
+    public bool canLook = true;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -21,6 +23,8 @@ public class ThirdPersonCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!canLook) return;
+        
         Vector3 viewDirection =
             player.position - new Vector3(transform.position.x, player.position.y, transform.position.z);
         orientation.forward = viewDirection.normalized;

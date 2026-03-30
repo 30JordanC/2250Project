@@ -8,11 +8,12 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Ground
   - Water
   - UI
   - WhatIsGround
   - Interactable
+  - Lava
   - 
   - 
   - 
@@ -25,8 +26,7 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
+  - Environment
   - 
   - 
   - 

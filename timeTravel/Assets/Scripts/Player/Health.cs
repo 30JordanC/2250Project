@@ -7,6 +7,7 @@ public class Health : MonoBehaviour
     public float passiveHealRate;
     public float healthRegenDelay;
     private float lastDamagedTime;
+    public DeathUI deathUI;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -43,5 +44,10 @@ public class Health : MonoBehaviour
     public void Die()
     {
         Debug.Log("Player died");
+
+        if (deathUI != null)
+        {
+            deathUI.ShowDeathScreen();
+        }
     }
 }
