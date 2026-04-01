@@ -7,6 +7,7 @@ public class SceneTransitionManager : MonoBehaviour
     public static SceneTransitionManager Instance;
 
     public GameObject playerRoot;
+    
 
     private string targetSpawnID;
 
@@ -66,8 +67,8 @@ public class SceneTransitionManager : MonoBehaviour
                 rb.angularVelocity = Vector3.zero;
             }
 
-            playerRoot.transform.position = targetSpawn.transform.position;
-            playerRoot.transform.rotation = targetSpawn.transform.rotation;
+            rb.position = targetSpawn.transform.position;
+            rb.rotation = targetSpawn.transform.rotation;
         }
     }
 
