@@ -8,7 +8,7 @@ public class GameControl : MonoBehaviour
     //public Player player;
     public int levelIndex = 0;
     public Level[] allLevels;
-
+    public GameObject timeUpScreen; 
     void Awake()
     {
         if (Instance == null)
@@ -54,5 +54,16 @@ public class GameControl : MonoBehaviour
     {
         Debug.Log("Player lost the level.");
         LoadLevel(levelIndex);
+    }
+    public void LoseByTime()
+    {
+        Debug.Log("Time ran out!");
+
+        Time.timeScale = 0f;
+
+        if (timeUpScreen != null)
+        {
+            timeUpScreen.SetActive(true);
+        }
     }
 }
