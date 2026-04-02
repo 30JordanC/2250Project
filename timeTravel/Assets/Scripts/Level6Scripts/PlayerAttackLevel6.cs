@@ -24,27 +24,32 @@ namespace Level6Scripts
 
             if (!Level6Manager.Instance.hasSword)
             {
-                Debug.Log("PlayerAttackLevel6: No sword yet. Pick up the sword first.");
+                Debug.Log("PlayerAttackLevel6: Pick up the sword first.");
                 return;
             }
 
+            // Play sword swing sound
+            SoundManager.Instance?.PlaySFX(SoundManager.SFX.SwordSwing);
+
             Collider[] hits = Physics.OverlapSphere(transform.position, attackRange, enemyLayer);
 
-            if (hits.Length == 0)
-                Debug.Log("PlayerAttackLevel6: Swung but hit nothing. Is the golem on the Enemy Layer?");
-
+            bool hitSomething = false;
             foreach (Collider hit in hits)
             {
                 EnemyHealth enemy = hit.GetComponent<EnemyHealth>();
                 if (enemy != null)
                 {
                     enemy.TakeDamage(attackDamage);
-                    Debug.Log($"PlayerAttackLevel6: Hit {hit.name} for {attackDamage} damage.");
+                    SoundManager.Instance?.PlaySFXAt(SoundManager.SFX.SwordHit, hit.transform.position);
+                    hitSomething = true;
+                    Debug.Log($"Hit {hit.name} for {attackDamage} damage.");
                 }
             }
+
+            if (!hitSomething)
+                Debug.Log("Swung but hit nothing. Is the golem on the Enemy Layer?");
         }
 
-        // Draws the attack range in the Scene view so you can see it
         private void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.red;

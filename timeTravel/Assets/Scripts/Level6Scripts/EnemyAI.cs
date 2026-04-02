@@ -40,13 +40,27 @@ namespace Level6Scripts
 
             _enemyHealth = GetComponent<EnemyHealth>();
 
-            if (player == null)
+            // Start searching for player repeatedly until found.
+            // This handles players that are imported/spawned at runtime
+            // so spawn order does not matter.
+            InvokeRepeating(nameof(FindPlayer), 0f, 1f);
+        }
+
+        private void FindPlayer()
+        {
+            // Already have a player reference, stop searching
+            if (player != null)
             {
-                GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-                if (playerObj != null)
-                    player = playerObj.transform;
-                else
-                    Debug.LogWarning("EnemyAI: No GameObject with tag 'Player' found. Make sure your player is tagged.");
+                CancelInvoke(nameof(FindPlayer));
+                return;
+            }
+
+            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj != null)
+            {
+                player = playerObj.transform;
+                CancelInvoke(nameof(FindPlayer));
+                Debug.Log("EnemyAI: Player found and locked on.");
             }
         }
 
@@ -141,11 +155,13 @@ namespace Level6Scripts
                 if (animator != null)
                     animator.SetTrigger(AttackHash);
 
-                // FIX: was using "Health" component which does not exist in your project.
-                // Hook this to your player's actual health script.
-                // Example: PlayerHealth ph = player.GetComponent<PlayerHealth>();
-                //          if (ph != null) ph.TakeDamage(attackDamage);
-                Debug.Log($"Enemy attacked player for {attackDamage} damage.");
+                // Play golem attack sound
+                SoundManager.Instance?.PlaySFXAt(SoundManager.SFX.GolemAttack, transform.position);
+
+                // Hook to your player health script here, for example:
+                // PlayerHealth ph = player.GetComponent<PlayerHealth>();
+                // if (ph != null) ph.TakeDamage(attackDamage);
+                Debug.Log($"EnemyAI: Golem attacked player for {attackDamage} damage.");
             }
         }
 

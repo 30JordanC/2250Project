@@ -1,7 +1,5 @@
 using UnityEngine;
 
-// FIX: was "namespace level6Scripts" (lowercase l) while everything else uses
-// "namespace Level6Scripts" (uppercase L). Unified to Level6Scripts.
 namespace Level6Scripts
 {
     public class WeaponPickupLevel6 : MonoBehaviour
@@ -13,11 +11,14 @@ namespace Level6Scripts
             if (Level6Manager.Instance != null)
             {
                 Level6Manager.Instance.CollectSword();
-                Debug.Log("Sword picked up!");
+                SoundManager.Instance?.PlaySFX(SoundManager.SFX.PickupSword);
+                // Switch from ambient to boss music when sword is picked up
+                SoundManager.Instance?.CrossfadeMusic(null);
+                SoundManager.Instance?.PlayBossMusic();
             }
             else
             {
-                Debug.LogWarning("WeaponPickupLevel6: Level6Manager not found in scene.");
+                Debug.LogWarning("WeaponPickupLevel6: Level6Manager not found.");
             }
 
             gameObject.SetActive(false);

@@ -10,50 +10,51 @@ namespace Level6Scripts
         public bool bossDead;
         public bool levelComplete;
 
-        // Assign the terra pickup object in Inspector — it starts disabled
-        // and gets enabled when the boss dies
         public GameObject terraObject;
 
         private void Awake()
         {
-            // FIX: Added singleton guard. Original would overwrite Instance
-            // if somehow two managers existed, causing unexpected behaviour.
             if (Instance == null)
-            {
                 Instance = this;
-            }
             else
             {
-                Debug.LogWarning("Level6Manager: Duplicate instance found and destroyed.");
                 Destroy(gameObject);
             }
+        }
+
+        private void Start()
+        {
+            // Start with background ambient music
+            SoundManager.Instance?.PlayBackgroundMusic();
         }
 
         public void CollectSword()
         {
             hasSword = true;
-            Debug.Log("Level6Manager: Sword collected. Press F to attack.");
+            Debug.Log("Level6Manager: Sword collected! Press F to attack.");
         }
 
         public void BossDefeated()
         {
             bossDead = true;
-            Debug.Log("Level6Manager: Boss defeated! Terra pickup is now available.");
+            Debug.Log("Level6Manager: Boss defeated! Terra pickup is now active.");
 
             if (terraObject != null)
                 terraObject.SetActive(true);
             else
-                Debug.LogWarning("Level6Manager: terraObject is not assigned in Inspector.");
+                Debug.LogWarning("Level6Manager: terraObject not assigned in Inspector.");
         }
 
         public void CompleteLevel()
         {
             if (levelComplete) return;
             levelComplete = true;
+
+            SoundManager.Instance?.PlaySFX(SoundManager.SFX.LevelComplete);
             Debug.Log("Level6Manager: Level 6 Complete!");
 
-            // Hook your scene transition here, for example:
-            // SceneTransitionManager.Instance.LoadScene("Credits", "SpawnStart");
+            // Uncomment to load next scene:
+            // SceneTransitionManager.Instance?.LoadScene("YourNextScene", "SpawnID");
         }
     }
 }
