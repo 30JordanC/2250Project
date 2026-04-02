@@ -36,9 +36,7 @@ namespace Level6Scripts
         private void Start()
         {
             if (animator == null)
-            {
                 animator = GetComponent<Animator>();
-            }
 
             _enemyHealth = GetComponent<EnemyHealth>();
 
@@ -46,9 +44,9 @@ namespace Level6Scripts
             {
                 GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
                 if (playerObj != null)
-                {
                     player = playerObj.transform;
-                }
+                else
+                    Debug.LogWarning("EnemyAI: No GameObject with tag 'Player' found. Make sure your player is tagged.");
             }
         }
 
@@ -60,21 +58,13 @@ namespace Level6Scripts
             float distance = Vector3.Distance(transform.position, player.position);
 
             if (distance <= attackRange)
-            {
                 AttackPlayer();
-            }
             else if (distance <= chaseRange)
-            {
                 ChasePlayer();
-            }
             else if (patrol && patrolPoints != null && patrolPoints.Length > 0)
-            {
                 Patrol();
-            }
             else
-            {
                 SetMoveAnimation(false);
-            }
         }
 
         private void ChasePlayer()
@@ -149,24 +139,20 @@ namespace Level6Scripts
                 _lastAttackTime = Time.time;
 
                 if (animator != null)
-                {
                     animator.SetTrigger(AttackHash);
-                }
 
-                Health playerHealth = player.GetComponent<Health>();
-                if (playerHealth != null)
-                {
-                    playerHealth.TakeDamage(attackDamage);
-                }
+                // FIX: was using "Health" component which does not exist in your project.
+                // Hook this to your player's actual health script.
+                // Example: PlayerHealth ph = player.GetComponent<PlayerHealth>();
+                //          if (ph != null) ph.TakeDamage(attackDamage);
+                Debug.Log($"Enemy attacked player for {attackDamage} damage.");
             }
         }
 
         private void SetMoveAnimation(bool moving)
         {
             if (animator != null)
-            {
                 animator.SetBool(IsMovingHash, moving);
-            }
         }
     }
 }
