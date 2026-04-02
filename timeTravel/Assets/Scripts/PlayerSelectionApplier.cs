@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerSelectionApplier : MonoBehaviour
 {
-    [Header("Assign your three player objects here")]
+    [Header("Assign your three player child objects here")]
     public GameObject malePlayer;
     public GameObject middlePlayer;
     public GameObject femalePlayer;
@@ -11,7 +11,7 @@ public class PlayerSelectionApplier : MonoBehaviour
     {
         if (CharacterSelectionManager.Instance == null)
         {
-            Debug.Log("CharacterSelectionManager not found. Defaulting to male.");
+            Debug.LogWarning("PlayerSelectionApplier: CharacterSelectionManager not found. Defaulting to male.");
             SetOnlyOneActive(malePlayer);
             return;
         }
@@ -31,6 +31,7 @@ public class PlayerSelectionApplier : MonoBehaviour
                 break;
 
             default:
+                Debug.LogWarning("PlayerSelectionApplier: No character selected. Defaulting to male.");
                 SetOnlyOneActive(malePlayer);
                 break;
         }

@@ -35,20 +35,30 @@ public class CharacterSelectionManager : MonoBehaviour
     {
         selectedCharacter = CharacterType.Male;
         Debug.Log("Male selected");
-        SceneManager.LoadScene(nextSceneName);
+        LoadNextScene();
     }
 
     public void SelectMiddle()
     {
         selectedCharacter = CharacterType.Middle;
         Debug.Log("Middle character selected");
-        SceneManager.LoadScene(nextSceneName);
+        LoadNextScene();
     }
 
     public void SelectFemale()
     {
         selectedCharacter = CharacterType.Female;
         Debug.Log("Female selected");
+        LoadNextScene();
+    }
+
+    private void LoadNextScene()
+    {
+        if (string.IsNullOrEmpty(nextSceneName))
+        {
+            Debug.LogError("CharacterSelectionManager: nextSceneName is not set!");
+            return;
+        }
         SceneManager.LoadScene(nextSceneName);
     }
 }
