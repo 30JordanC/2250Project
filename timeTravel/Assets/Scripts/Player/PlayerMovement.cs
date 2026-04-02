@@ -28,7 +28,9 @@ public class PlayerMovement : MonoBehaviour
     private bool grounded;
     private bool isCrouching;
 
-    public Animator animator;
+    public Animator animator1;
+    public Animator animator2;
+    public Animator animator3;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -112,7 +114,9 @@ public class PlayerMovement : MonoBehaviour
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
         stamina.UseStamina(stamina.jumpStaminaDrain);
 
-        animator.SetTrigger("Jump");
+        animator1.SetTrigger("Jump");
+        animator2.SetTrigger("Jump");
+        animator3.SetTrigger("Jump");
     }
 
     void UpdateAnimator()
@@ -122,10 +126,20 @@ public class PlayerMovement : MonoBehaviour
 
         bool isMoving = moveDirection.magnitude > 0.1f;
         bool isSprinting = Input.GetKey(sprintKey) && isMoving && !isCrouching && stamina.HasStamina();
-        animator.SetFloat("Speed", speed);
-        animator.SetBool("IsCrouching", isCrouching);
-        animator.SetBool("IsSprinting", isSprinting);
-        animator.SetBool("IsGrounded", grounded);
+        animator1.SetFloat("Speed", speed);
+        animator1.SetBool("IsCrouching", isCrouching);
+        animator1.SetBool("IsSprinting", isSprinting);
+        animator1.SetBool("IsGrounded", grounded);
+        
+        animator2.SetFloat("Speed", speed);
+        animator2.SetBool("IsCrouching", isCrouching);
+        animator2.SetBool("IsSprinting", isSprinting);
+        animator2.SetBool("IsGrounded", grounded);
+        
+        animator3.SetFloat("Speed", speed);
+        animator3.SetBool("IsCrouching", isCrouching);
+        animator3.SetBool("IsSprinting", isSprinting);
+        animator3.SetBool("IsGrounded", grounded);
     }
     
     public void StopMovement()
@@ -133,7 +147,13 @@ public class PlayerMovement : MonoBehaviour
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
 
-        animator.SetFloat("Speed", 0f);
-        animator.SetBool("IsSprinting", false);
+        animator1.SetFloat("Speed", 0f);
+        animator1.SetBool("IsSprinting", false);
+        
+        animator2.SetFloat("Speed", 0f);
+        animator2.SetBool("IsSprinting", false);
+        
+        animator3.SetFloat("Speed", 0f);
+        animator3.SetBool("IsSprinting", false);
     }
 }

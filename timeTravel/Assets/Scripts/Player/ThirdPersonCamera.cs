@@ -6,7 +6,9 @@ public class ThirdPersonCamera : MonoBehaviour
 
     public Transform player;
 
-    public Transform playerObject;
+    public Transform playerObject1;
+    public Transform playerObject2;
+    public Transform playerObject3;
 
     public Rigidbody rb;
 
@@ -39,8 +41,20 @@ public class ThirdPersonCamera : MonoBehaviour
             Quaternion targetRotation = Quaternion.LookRotation(inputDirection.normalized, Vector3.up);
             Quaternion modelOffset = Quaternion.Euler(0f, 0f, 0f);
 
-            playerObject.rotation = Quaternion.Slerp(
-                playerObject.rotation,
+            playerObject1.rotation = Quaternion.Slerp(
+                playerObject1.rotation,
+                targetRotation * modelOffset,
+                rotationSpeed * Time.deltaTime
+            );
+            
+            playerObject2.rotation = Quaternion.Slerp(
+                playerObject2.rotation,
+                targetRotation * modelOffset,
+                rotationSpeed * Time.deltaTime
+            );
+            
+            playerObject3.rotation = Quaternion.Slerp(
+                playerObject3.rotation,
                 targetRotation * modelOffset,
                 rotationSpeed * Time.deltaTime
             );
