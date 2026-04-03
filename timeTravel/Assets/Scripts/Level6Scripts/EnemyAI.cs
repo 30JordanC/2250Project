@@ -1,20 +1,21 @@
+using Player;
 using UnityEngine;
 
 namespace Level6Scripts
 {
     public class EnemyAI : MonoBehaviour
     {
-        [Header("Target")]
+        [Header("Target (auto-found — do not assign manually)")]
         public Transform player;
 
         [Header("Movement")]
-        public float moveSpeed = 2.5f;
-        public float chaseRange = 10f;
-        public float attackRange = 2f;
+        public float moveSpeed     = 2.5f;
+        public float chaseRange    = 30f;
+        public float attackRange   = 2f;
         public float rotationSpeed = 8f;
 
         [Header("Attack")]
-        public float attackDamage = 15f;
+        public float attackDamage   = 15f;
         public float attackCooldown = 1.2f;
 
         [Header("Optional Patrol")]
@@ -22,47 +23,75 @@ namespace Level6Scripts
         public Transform[] patrolPoints;
         public float patrolWaitTime = 1.5f;
 
-        [Header("Optional")]
+        [Header("Optional — drag Animator component here")]
         public Animator animator;
 
-        private static readonly int AttackHash = Animator.StringToHash("Attack");
+        private static readonly int AttackHash   = Animator.StringToHash("Attack");
         private static readonly int IsMovingHash = Animator.StringToHash("isMoving");
+        private static readonly int IsDeadHash   = Animator.StringToHash("isDead");
 
-        private int _currentPatrolIndex;
-        private float _lastAttackTime = -999f;
-        private float _patrolWaitTimer;
+        private int         _currentPatrolIndex;
+        private float       _lastAttackTime = -999f;
+        private float       _patrolWaitTimer;
         private EnemyHealth _enemyHealth;
+
+        // ─────────────────────────────────────────────────────────────
 
         private void Start()
         {
             if (animator == null)
-                animator = GetComponent<Animator>();
+                animator = GetComponentInChildren<Animator>();
 
             _enemyHealth = GetComponent<EnemyHealth>();
 
-            // Start searching for player repeatedly until found.
-            // This handles players that are imported/spawned at runtime
-            // so spawn order does not matter.
-            InvokeRepeating(nameof(FindPlayer), 0f, 1f);
+            InvokeRepeating(nameof(FindPlayer), 0f, 0.5f);
         }
 
         private void FindPlayer()
         {
-            // Already have a player reference, stop searching
             if (player != null)
             {
                 CancelInvoke(nameof(FindPlayer));
                 return;
             }
 
-            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-            if (playerObj != null)
+            // 1. Try by Player tag
+            GameObject byTag = GameObject.FindGameObjectWithTag("Player");
+            if (byTag != null)
             {
-                player = playerObj.transform;
+                player = byTag.transform;
                 CancelInvoke(nameof(FindPlayer));
-                Debug.Log("EnemyAI: Player found and locked on.");
+                Debug.Log("EnemyAI: Player found by tag — " + player.name);
+                return;
             }
+
+            // 2. Grab directly from SceneTransitionManager (most reliable for your setup)
+            if (SceneTransitionManager.Instance != null &&
+                SceneTransitionManager.Instance.playerRoot != null)
+            {
+                player = SceneTransitionManager.Instance.playerRoot.transform;
+                CancelInvoke(nameof(FindPlayer));
+                Debug.Log("EnemyAI: Player found via SceneTransitionManager — " + player.name);
+                return;
+            }
+
+            // 3. Fallback: search by common player object names
+            foreach (string n in new[] { "Player", "PlayerObject", "NewPlayerObject", "PlayerCharacter" })
+            {
+                GameObject g = GameObject.Find(n);
+                if (g != null)
+                {
+                    player = g.transform;
+                    CancelInvoke(nameof(FindPlayer));
+                    Debug.Log("EnemyAI: Player found by name — " + n);
+                    return;
+                }
+            }
+
+            Debug.Log("EnemyAI: Searching for player...");
         }
+
+        // ─────────────────────────────────────────────────────────────
 
         private void Update()
         {
@@ -155,13 +184,15 @@ namespace Level6Scripts
                 if (animator != null)
                     animator.SetTrigger(AttackHash);
 
-                // Play golem attack sound
                 SoundManager.Instance?.PlaySFXAt(SoundManager.SFX.GolemAttack, transform.position);
 
-                // Hook to your player health script here, for example:
-                // PlayerHealth ph = player.GetComponent<PlayerHealth>();
-                // if (ph != null) ph.TakeDamage(attackDamage);
-                Debug.Log($"EnemyAI: Golem attacked player for {attackDamage} damage.");
+                // Deal damage to player
+                Health ph = player.GetComponentInChildren<Health>()
+                                     ?? player.GetComponent<Health>();
+                if (ph != null)
+                    ph.TakeDamage(attackDamage);
+                else
+                    Debug.Log("EnemyAI: No PlayerHealthLevel6 on player — add it to your Player GameObject.");
             }
         }
 
@@ -169,6 +200,22 @@ namespace Level6Scripts
         {
             if (animator != null)
                 animator.SetBool(IsMovingHash, moving);
+        }
+
+        public void OnDeath()
+        {
+            CancelInvoke(nameof(FindPlayer));
+            if (animator != null)
+                animator.SetBool(IsDeadHash, true);
+            enabled = false;
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(transform.position, chaseRange);
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, attackRange);
         }
     }
 }
