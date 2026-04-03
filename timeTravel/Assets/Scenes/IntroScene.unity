@@ -5825,7 +5825,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   interactText: {fileID: 1791123733}
-  animator: {fileID: 801152951}
+  animator1: {fileID: 801152951}
+  animator2: {fileID: 898208120}
+  animator3: {fileID: 1502038286}
 --- !u!114 &1741498125
 MonoBehaviour:
   m_ObjectHideFlags: 0
