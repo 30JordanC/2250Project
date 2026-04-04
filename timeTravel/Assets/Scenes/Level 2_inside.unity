@@ -2854,8 +2854,12 @@ PrefabInstance:
       value: opensIntro
       objectReference: {fileID: 0}
     - target: {fileID: 3456121894426593199, guid: 6380dceae049ed04f928945592a73cef, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3456121894426593199, guid: 6380dceae049ed04f928945592a73cef, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.39
+      value: -0.66
       objectReference: {fileID: 0}
     - target: {fileID: 3456121894426593199, guid: 6380dceae049ed04f928945592a73cef, type: 3}
       propertyPath: m_LocalPosition.y
@@ -5841,7 +5845,9 @@ MonoBehaviour:
   sensitivyX: 400
   sensitivityY: 400
   orientation: {fileID: 1190606009}
-  playerObject: {fileID: 1922585467}
+  playerObject1: {fileID: 0}
+  playerObject2: {fileID: 0}
+  playerObject3: {fileID: 0}
   canLook: 1
 --- !u!114 &508708443
 MonoBehaviour:
@@ -9390,7 +9396,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &900846797
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10052,7 +10058,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &991376936
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11696,7 +11702,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1190070352
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11711,7 +11717,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ThirdPersonCamera
   orientation: {fileID: 1190606009}
   player: {fileID: 1496367293}
-  playerObject: {fileID: 1922585467}
+  playerObject1: {fileID: 0}
+  playerObject2: {fileID: 0}
+  playerObject3: {fileID: 0}
   rb: {fileID: 1496367292}
   rotationSpeed: 7
   canLook: 1
@@ -12979,7 +12987,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1267365601
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15461,7 +15469,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1496367290
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15564,7 +15572,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   interactText: {fileID: 1241034602}
-  animator: {fileID: 1922585468}
+  animator1: {fileID: 0}
+  animator2: {fileID: 0}
+  animator3: {fileID: 0}
 --- !u!136 &1496367295
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -15612,7 +15622,9 @@ MonoBehaviour:
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
-  animator: {fileID: 1922585468}
+  animator1: {fileID: 0}
+  animator2: {fileID: 0}
+  animator3: {fileID: 0}
 --- !u!1001 &1509714427
 PrefabInstance:
   m_ObjectHideFlags: 0
