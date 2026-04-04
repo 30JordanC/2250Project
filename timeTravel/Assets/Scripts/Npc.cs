@@ -4,7 +4,6 @@ using System.Collections;
 
 public class Npc : MonoBehaviour
 {
-    // ── Inspector ────────────────────────────────────────────────
     [Header("Dialogue")]
     [TextArea(2, 5)]
     public string[] dialogueLines = new string[]
@@ -19,7 +18,7 @@ public class Npc : MonoBehaviour
     };
 
     [Header("Interaction")]
-    public float interactRange = 3f;
+    public float interactRange = 5f;
     public KeyCode interactKey = KeyCode.E;
 
     [Header("UI - Assign in Inspector")]
@@ -37,11 +36,6 @@ public class Npc : MonoBehaviour
     public AudioClip talkSound;
     public AudioClip greetSound;
 
-    [Header("Optional Animator")]
-    public Animator animator;
-    public string talkingBoolName = "isTalking";
-
-    // ── Private ──────────────────────────────────────────────────
     private Transform _player;
     private int _dialogueIndex;
     private bool _isTalking;
@@ -49,34 +43,10 @@ public class Npc : MonoBehaviour
     private bool _isTyping;
     private Coroutine _typingCoroutine;
 
-    private static readonly int IsTalkingHash = Animator.StringToHash("isTalking");
-    private static readonly int IdleActionHash = Animator.StringToHash("IdleAction");
-
-    // ─────────────────────────────────────────────────────────────
-
     private void Start()
     {
-        // Try by tag first
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-
-        // Fallback — find by Health component if tag fails
-        if (playerObj == null)
-        {
-            var health = FindFirstObjectByType<Player.Health>();
-            if (health != null)
-                playerObj = health.gameObject;
-        }
-
-        if (playerObj != null)
-            _player = playerObj.transform;
-        else
-            Debug.LogWarning($"Npc ({name}): No Player found.");
-
         if (audioSource == null)
             audioSource = GetComponent<AudioSource>();
-
-        if (animator == null)
-            animator = GetComponent<Animator>();
 
         SetDialoguePanelActive(false);
         SetPromptActive(false);
@@ -84,20 +54,23 @@ public class Npc : MonoBehaviour
 
     private void Update()
     {
-        // Keep retrying to find player if not found yet
         if (_player == null)
         {
-            Start();
+            FindPlayer();
             return;
         }
 
         float distance = Vector3.Distance(transform.position, _player.position);
+
+        if (Time.frameCount % 60 == 0)
+        {
+            Debug.Log($"NPC Distance: {distance} | InRange: {_playerInRange} | Talking: {_isTalking} | Panel: {dialoguePanel != null} | Text: {dialogueText != null} | Prompt: {interactPromptText != null}");
+        }
+
         _playerInRange = distance <= interactRange;
 
-        // Show / hide interact prompt
         SetPromptActive(_playerInRange && !_isTalking);
 
-        // Handle E key press
         if (_playerInRange && Input.GetKeyDown(interactKey))
         {
             if (_isTalking)
@@ -106,36 +79,55 @@ public class Npc : MonoBehaviour
                 StartTalking();
         }
 
-        // Close dialogue if player walks away
         if (_isTalking && !_playerInRange)
             StopTalking();
 
-        // Smoothly look at player while talking
         if (_isTalking && lookAtPlayerWhenTalking)
             LookAtPlayer();
-
-        // Play idle action animation when player is nearby but not talking
-        if (_playerInRange && !_isTalking && animator != null)
-            animator.SetTrigger(IdleActionHash);
     }
 
-    // ── Dialogue Flow ─────────────────────────────────────────────
+    private void FindPlayer()
+    {
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+
+        if (playerObj == null)
+        {
+            foreach (GameObject obj in FindObjectsByType<GameObject>(FindObjectsSortMode.None))
+            {
+                if (obj.name == "PlayerRoot" || obj.name == "Player")
+                {
+                    playerObj = obj;
+                    Debug.Log($"Npc: Found player by name: {obj.name}");
+                    break;
+                }
+            }
+        }
+
+        if (playerObj != null)
+        {
+            _player = playerObj.transform;
+            Debug.Log($"Npc: Player assigned: {playerObj.name} | Tag: {playerObj.tag}");
+        }
+        else
+        {
+            if (Time.frameCount % 120 == 0)
+                Debug.LogWarning("Npc: Player not found yet, still searching...");
+        }
+    }
 
     private void StartTalking()
     {
         _isTalking = true;
         _dialogueIndex = 0;
-
         SetDialoguePanelActive(true);
         SetPromptActive(false);
-        SetAnimatorTalking(true);
         PlaySound(greetSound);
         ShowLine(_dialogueIndex);
+        Debug.Log("Npc: StartTalking called!");
     }
 
     private void AdvanceDialogue()
     {
-        // If still typing, skip to end of current line
         if (_isTyping)
         {
             if (_typingCoroutine != null)
@@ -164,7 +156,7 @@ public class Npc : MonoBehaviour
             StopCoroutine(_typingCoroutine);
 
         SetDialoguePanelActive(false);
-        SetAnimatorTalking(false);
+        SetPromptActive(false);
     }
 
     private void ShowLine(int index)
@@ -198,8 +190,6 @@ public class Npc : MonoBehaviour
         _isTyping = false;
     }
 
-    // ── Helpers ───────────────────────────────────────────────────
-
     private void LookAtPlayer()
     {
         Vector3 direction = _player.position - transform.position;
@@ -219,18 +209,16 @@ public class Npc : MonoBehaviour
     {
         if (dialoguePanel != null)
             dialoguePanel.SetActive(active);
+        else
+            Debug.LogWarning("Npc: DialoguePanel is not assigned in Inspector!");
     }
 
     private void SetPromptActive(bool active)
     {
         if (interactPromptText != null)
             interactPromptText.gameObject.SetActive(active);
-    }
-
-    private void SetAnimatorTalking(bool talking)
-    {
-        if (animator != null)
-            animator.SetBool(IsTalkingHash, talking);
+        else
+            Debug.LogWarning("Npc: InteractPromptText is not assigned in Inspector!");
     }
 
     private void PlaySound(AudioClip clip)

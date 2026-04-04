@@ -4257,23 +4257,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Npc
   dialogueLines:
-  - Traveller! The golem guards this land.
-  - Find the Legendary Axe before you face it.
-  - Strike it down and the Terra stone will appear.
-  - Bring me the Terra stone to complete your journey!
-  interactRange: 3
+  - HALT! I am the Guardian Golem of this realm.
+  - A dark ghost has corrupted this land with evil energy.
+  - It cannot be destroyed by ordinary means...
+  - You must find the Legendary Axe hidden on these bridges.
+  - Only its ancient power can banish the ghost forever.
+  - Find the axe. Defeat the ghost. Restore this world.
+  - Go now, traveller. Time is running out!
+  interactRange: 5
   interactKey: 101
-  dialoguePanel: {fileID: 1622147211}
-  dialogueText: {fileID: 1667106493}
-  interactPromptText: {fileID: 1401874676}
+  dialoguePanel: {fileID: 0}
+  dialogueText: {fileID: 0}
+  interactPromptText: {fileID: 0}
   typingSpeed: 0.04
   lookAtPlayerWhenTalking: 1
   rotationSpeed: 4
   audioSource: {fileID: 0}
   talkSound: {fileID: 0}
   greetSound: {fileID: 0}
-  animator: {fileID: 0}
-  talkingBoolName: isTalking
 --- !u!1001 &1879687432
 PrefabInstance:
   m_ObjectHideFlags: 0
