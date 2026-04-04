@@ -40,6 +40,7 @@ public class PipePuzzle : MonoBehaviour
     public void OnTileClicked(int tileIndex)
     {
         tiles[tileIndex].Rotate();
+        DebugConnections();
         CheckWin();
     }
 
@@ -55,11 +56,34 @@ public class PipePuzzle : MonoBehaviour
                 bool iConnects         = tiles[i].Connects(dir);
                 bool neighbourConnects = neighbour >= 0 && tiles[neighbour].Connects(opposite);
 
-                if (iConnects && neighbour == -1) return;
-                if (iConnects != neighbourConnects) return;
+                if (iConnects && neighbour == -1)
+                {
+                    Debug.Log($"❌ Tile {i} connects toward edge in dir {dir} — invalid");
+                    return;
+                }
+
+                if (iConnects != neighbourConnects)
+                {
+                    Debug.Log($"❌ Mismatch: Tile {i} dir {dir} = {iConnects} but neighbour {neighbour} opposite = {neighbourConnects}");
+                    return;
+                }
             }
         }
 
+        Debug.Log("✅ Puzzle solved!");
         wallInteract.OnPuzzleSolved();
+    }
+
+    private void DebugConnections()
+    {
+        Debug.Log("--- Current Tile Connections ---");
+        for (int i = 0; i < tiles.Length; i++)
+        {
+            bool t = tiles[i].Connects(0);
+            bool r = tiles[i].Connects(1);
+            bool b = tiles[i].Connects(2);
+            bool l = tiles[i].Connects(3);
+            Debug.Log($"Tile {i}: Top={t} Right={r} Bottom={b} Left={l}");
+        }
     }
 }
