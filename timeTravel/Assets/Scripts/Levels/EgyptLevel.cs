@@ -36,7 +36,7 @@ public class EgyptLevel : Level
 
     public override void SpawnNPCs()
     {
-        // Instantiate NPC prefabs here
+        // Instantiate Npc prefabs here
         Instantiate(npcPrefab, npcSpawnPoint.position, Quaternion.identity);
     }
 
