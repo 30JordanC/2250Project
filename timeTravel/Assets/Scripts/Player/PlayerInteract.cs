@@ -16,7 +16,9 @@ public class PlayerInteract : MonoBehaviour
 
     public TMPro.TMP_Text interactText;
 
-    public Animator animator;
+    public Animator animator1;
+    public Animator animator2;
+    public Animator animator3;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -32,7 +34,9 @@ public class PlayerInteract : MonoBehaviour
         {
             currentInteractable.Interact();
             
-            animator.SetTrigger("Interact");
+            animator1.SetTrigger("Interact");
+            animator2.SetTrigger("Interact");
+            animator3.SetTrigger("Interact");
         }
     }
 

@@ -12,6 +12,9 @@ namespace Level6Scripts
         public bool destroyOnDeath;
         public float destroyDelay = 2f;
 
+        [Header("Boss Settings")]
+        public bool isBoss;
+
         private static readonly int HurtHash = Animator.StringToHash("Hurt");
         private static readonly int IsDeadHash = Animator.StringToHash("isDead");
 
@@ -22,9 +25,7 @@ namespace Level6Scripts
             currentHealth = maxHealth;
 
             if (animator == null)
-            {
                 animator = GetComponent<Animator>();
-            }
         }
 
         public void TakeDamage(float amount)
@@ -35,14 +36,13 @@ namespace Level6Scripts
             currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
 
             if (animator != null)
-            {
                 animator.SetTrigger(HurtHash);
-            }
+
+            // Play hurt sound
+            SoundManager.Instance?.PlaySFXAt(SoundManager.SFX.GolemHurt, transform.position);
 
             if (currentHealth <= 0f)
-            {
                 Die();
-            }
         }
 
         private void Die()
@@ -51,24 +51,23 @@ namespace Level6Scripts
 
             EnemyAI enemyAI = GetComponent<EnemyAI>();
             if (enemyAI != null)
-            {
                 enemyAI.enabled = false;
-            }
 
             if (animator != null)
-            {
                 animator.SetBool(IsDeadHash, true);
-            }
+
+            // Play death sound and crossfade to victory music
+            SoundManager.Instance?.PlaySFXAt(SoundManager.SFX.GolemDeath, transform.position);
+            SoundManager.Instance?.CrossfadeMusic(null); // stops boss music
+            SoundManager.Instance?.PlayVictoryMusic();
+
+            if (isBoss && Level6Manager.Instance != null)
+                Level6Manager.Instance.BossDefeated();
 
             if (destroyOnDeath)
-            {
                 Destroy(gameObject, destroyDelay);
-            }
         }
 
-        public bool IsDead()
-        {
-            return _isDead;
-        }
+        public bool IsDead() => _isDead;
     }
 }

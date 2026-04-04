@@ -98,6 +98,7 @@ Material:
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &3863409278141750975
+--- !u!114 &4615612182014046617
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
