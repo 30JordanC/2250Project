@@ -5,6 +5,7 @@ public class DeathUI : MonoBehaviour
 {
     public GameObject deathScreen;
     public GameObject player;
+    public GameObject openIntro;
 
     public void ShowDeathScreen()
     {
@@ -20,6 +21,7 @@ public class DeathUI : MonoBehaviour
     {
         Time.timeScale = 1f;
         deathScreen.SetActive(false);
+        openIntro.SetActive(false);
 
         RespawnManager.instance.Respawn(player);
 
