@@ -1,4 +1,3 @@
-
 using UnityEngine;
 
 namespace Player
@@ -17,9 +16,7 @@ namespace Player
         {
             _isDead = false;
             currentHealth = maxHealth;
-
-            if (deathUI == null)
-                deathUI = FindFirstObjectByType<DeathUI>();
+            TryFindDeathUI();
         }
 
         void Update()
@@ -29,8 +26,16 @@ namespace Player
             if (Time.time > _lastDamagedTime + healthRegenDelay && currentHealth < maxHealth)
                 Heal(passiveHealRate * Time.deltaTime);
 
-            if (deathUI == null)
-                deathUI = FindFirstObjectByType<DeathUI>();
+            // Keep trying every 60 frames until found
+            if (deathUI == null && Time.frameCount % 60 == 0)
+                TryFindDeathUI();
+        }
+
+        private void TryFindDeathUI()
+        {
+            deathUI = FindFirstObjectByType<DeathUI>();
+            if (deathUI != null)
+                Debug.Log("Health: DeathUI found!");
         }
 
         public void TakeDamage(float amount)
@@ -50,7 +55,6 @@ namespace Player
         public void Heal(float amount)
         {
             if (_isDead) return;
-
             currentHealth += amount;
             currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
         }
@@ -62,20 +66,21 @@ namespace Player
 
             Debug.Log("Player died!");
 
+            // Try one more time to find DeathUI
             if (deathUI == null)
-                deathUI = FindFirstObjectByType<DeathUI>();
+                TryFindDeathUI();
 
             if (deathUI != null)
                 deathUI.ShowDeathScreen();
             else
-                Debug.LogWarning("Health: DeathUI not found in scene!");
+                Debug.LogWarning("Health: DeathUI not found!");
         }
 
         public void ResetHealth()
         {
             _isDead = false;
             currentHealth = maxHealth;
-            Debug.Log("Health: Player health reset!");
+            Debug.Log("Health: Reset!");
         }
     }
 }

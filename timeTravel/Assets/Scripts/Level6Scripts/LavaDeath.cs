@@ -1,47 +1,44 @@
 using UnityEngine;
-using Player;
-using Level6Scripts;
 
 public class LavaDeath : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log($"LavaDeath triggered by: {other.gameObject.name}");
-        HandleDeath(other);
+        Debug.Log($"LavaDeath: Triggered by {other.gameObject.name}");
+        TryKill(other);
     }
 
     private void OnTriggerStay(Collider other)
     {
-        HandleDeath(other);
+        TryKill(other);
     }
 
-    private void HandleDeath(Collider other)
+    private void TryKill(Collider other)
     {
-        // Skip if this is another trigger or the lava itself
-        if (other.isTrigger) return;
         if (other.gameObject == gameObject) return;
+        if (other.isTrigger) return;
 
         // Kill player
-        Health ph = other.GetComponent<Health>()
-                    ?? other.GetComponentInParent<Health>()
-                    ?? other.GetComponentInChildren<Health>();
+        Player.Health ph = other.GetComponent<Player.Health>()
+                           ?? other.GetComponentInParent<Player.Health>()
+                           ?? other.GetComponentInChildren<Player.Health>();
 
         if (ph != null)
         {
-            Debug.Log($"LavaDeath: Killing player {other.gameObject.name}!");
+            Debug.Log("LavaDeath: Killing player!");
             ph.Die();
             return;
         }
 
         // Kill enemy
-        EnemyHealth eh = other.GetComponent<EnemyHealth>()
-                         ?? other.GetComponentInParent<EnemyHealth>();
+        Level6Scripts.EnemyHealth eh =
+            other.GetComponent<Level6Scripts.EnemyHealth>()
+            ?? other.GetComponentInParent<Level6Scripts.EnemyHealth>();
 
         if (eh != null)
         {
-            Debug.Log($"LavaDeath: Killing enemy {other.gameObject.name}!");
+            Debug.Log("LavaDeath: Killing enemy!");
             eh.TakeDamage(9999f);
-            return;
         }
     }
 }

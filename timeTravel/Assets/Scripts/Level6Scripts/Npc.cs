@@ -4,18 +4,19 @@ using UnityEngine.UI;
 
 namespace Level6Scripts
 {
-    public class TerraGuideNpc : MonoBehaviour
+    public class Npc : MonoBehaviour
     {
         [Header("Dialogue")]
         [TextArea(2, 5)]
         public string[] dialogueLines = new string[]
         {
-            "Traveller, listen carefully!",
-            "You must collect the Terra Artifact — a glowing blue-orange crystal.",
-            "But beware... the ghost has scattered fake stones across these bridges.",
-            "The fakes are dull and lifeless. The real Terra glows with inner light.",
-            "Do not be fooled! Only the true Terra Artifact will complete your mission.",
-            "Find it. Collect it. And restore balance to this realm!"
+            "HALT! I am the Guardian Golem of this realm.",
+            "A dark ghost has corrupted this land with evil energy.",
+            "It cannot be destroyed by ordinary means...",
+            "You must find the Legendary Axe hidden on these bridges.",
+            "Only its ancient power can banish the ghost forever.",
+            "Find the axe. Defeat the ghost. Restore this world.",
+            "Go now, traveller. Time is running out!"
         };
 
         [Header("Voice Lines - one clip per dialogue line")]
@@ -203,7 +204,7 @@ namespace Level6Scripts
             if (dialoguePanel != null)
                 dialoguePanel.SetActive(active);
             else
-                Debug.LogWarning("TerraGuideNpc: DialoguePanel not assigned!");
+                Debug.LogWarning("Npc: DialoguePanel not assigned!");
         }
 
         private void PlaySound(AudioClip clip)

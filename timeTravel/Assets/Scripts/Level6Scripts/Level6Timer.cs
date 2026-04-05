@@ -12,15 +12,9 @@ namespace Level6Scripts
         public Text timerText;
         public GameObject timerPanel;
 
-        [Header("Audio")]
-        public AudioSource audioSource;
-        public AudioClip tickSound;
-        public AudioClip urgentTickSound;
-
         private float _timeRemaining;
         private bool _timerRunning;
         private bool _timerExpired;
-        private float _lastTickTime;
 
         public static Level6Timer Instance;
 
@@ -38,12 +32,6 @@ namespace Level6Scripts
             _timerRunning = false;
             _timerExpired = false;
 
-            if (audioSource == null)
-                audioSource = GetComponent<AudioSource>();
-
-            if (audioSource == null)
-                audioSource = gameObject.AddComponent<AudioSource>();
-
             if (timerPanel != null)
                 timerPanel.SetActive(false);
         }
@@ -53,9 +41,7 @@ namespace Level6Scripts
             if (!_timerRunning || _timerExpired) return;
 
             _timeRemaining -= Time.deltaTime;
-
             UpdateTimerUI();
-            PlayTickSound();
 
             if (_timeRemaining <= 30f && timerText != null)
                 timerText.color = Color.red;
@@ -86,36 +72,16 @@ namespace Level6Scripts
             if (timerPanel != null)
                 timerPanel.SetActive(false);
 
-            if (audioSource != null)
-                audioSource.Stop();
-
             Debug.Log("Level6Timer: Timer stopped!");
-        }
-
-        private void PlayTickSound()
-        {
-            if (audioSource == null) return;
-
-            float tickInterval = _timeRemaining > 30f ? 1f : 0.5f;
-
-            if (Time.time >= _lastTickTime + tickInterval)
-            {
-                _lastTickTime = Time.time;
-
-                if (_timeRemaining <= 30f && urgentTickSound != null)
-                    audioSource.PlayOneShot(urgentTickSound);
-                else if (tickSound != null)
-                    audioSource.PlayOneShot(tickSound);
-            }
         }
 
         private void UpdateTimerUI()
         {
             if (timerText == null) return;
 
-            float clampedTime = Mathf.Max(0f, _timeRemaining);
-            int minutes = Mathf.FloorToInt(clampedTime / 60f);
-            int seconds = Mathf.FloorToInt(clampedTime % 60f);
+            float t = Mathf.Max(0f, _timeRemaining);
+            int minutes = Mathf.FloorToInt(t / 60f);
+            int seconds = Mathf.FloorToInt(t % 60f);
             timerText.text = $"Time Left: {minutes:00}:{seconds:00}";
         }
 
@@ -124,53 +90,61 @@ namespace Level6Scripts
             _timerExpired = true;
             _timerRunning = false;
 
-            Debug.Log("Level6Timer: Time is up!");
-
             if (timerPanel != null)
                 timerPanel.SetActive(false);
 
-            if (audioSource != null)
-                audioSource.Stop();
+            Debug.Log("Level6Timer: Time expired! Killing player...");
 
             KillPlayer();
         }
 
         private void KillPlayer()
         {
+            // Search every possible way
+            Player.Health ph = null;
+
+            // Method 1 — by tag
             GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-
-            if (playerObj == null && SceneTransitionManager.Instance != null)
-                playerObj = SceneTransitionManager.Instance.playerRoot;
-
-            if (playerObj == null)
-                playerObj = GameObject.Find("PlayerRoot");
-
             if (playerObj != null)
             {
-                Debug.Log($"Level6Timer: Found {playerObj.name} killing now!");
+                ph = playerObj.GetComponent<Player.Health>()
+                     ?? playerObj.GetComponentInChildren<Player.Health>()
+                     ?? playerObj.GetComponentInParent<Player.Health>();
+            }
 
-                Player.Health ph = playerObj.GetComponent<Player.Health>()
-                             ?? playerObj.GetComponentInChildren<Player.Health>()
-                             ?? playerObj.GetComponentInParent<Player.Health>();
+            // Method 2 — SceneTransitionManager
+            if (ph == null && SceneTransitionManager.Instance != null
+                && SceneTransitionManager.Instance.playerRoot != null)
+            {
+                GameObject root = SceneTransitionManager.Instance.playerRoot;
+                ph = root.GetComponent<Player.Health>()
+                     ?? root.GetComponentInChildren<Player.Health>();
+            }
 
-                if (ph != null)
-                {
-                    ph.Die();
-                    Debug.Log("Level6Timer: Die() called!");
-                    return;
-                }
+            // Method 3 — find by name
+            if (ph == null)
+            {
+                GameObject byName = GameObject.Find("PlayerRoot");
+                if (byName != null)
+                    ph = byName.GetComponentInChildren<Player.Health>();
+            }
 
-                Player.Health[] allHealth = FindObjectsByType<Player.Health>(FindObjectsSortMode.None);
-                if (allHealth.Length > 0)
-                {
-                    allHealth[0].Die();
-                    Debug.Log("Level6Timer: Die() via FindObjectsByType!");
-                }
+            // Method 4 — find all Health in scene
+            if (ph == null)
+            {
+                Player.Health[] all = FindObjectsByType<Player.Health>(
+                    FindObjectsSortMode.None);
+                if (all.Length > 0)
+                    ph = all[0];
+            }
+
+            if (ph != null)
+            {
+                Debug.Log("Level6Timer: Found Health — calling Die()!");
+                ph.Die();
             }
             else
-            {
-                Debug.LogWarning("Level6Timer: Player not found!");
-            }
+                Debug.LogWarning("Level6Timer: Could not find Health anywhere!");
         }
     }
 }
