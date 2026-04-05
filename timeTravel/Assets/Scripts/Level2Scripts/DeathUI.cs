@@ -1,82 +1,84 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Level2Scripts
+public class DeathUI : MonoBehaviour
 {
-    public class DeathUI : MonoBehaviour
+    public GameObject deathScreen;
+    public GameObject player;
+    public GameObject openIntro;
+
+    public void ShowDeathScreen()
     {
-        public GameObject deathScreen;
-        public GameObject player;
-        public GameObject openIntro;
+        if (deathScreen != null)
+            deathScreen.SetActive(true);
 
-        public void ShowDeathScreen()
+        Time.timeScale = 0f;
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        Debug.Log("DeathUI: Death screen shown!");
+    }
+
+    public void Respawn()
+    {
+        Time.timeScale = 1f;
+
+        if (deathScreen != null)
+            deathScreen.SetActive(false);
+
+        if (openIntro != null)
+            openIntro.SetActive(false);
+
+        // Reset player health
+        ResetPlayerHealth();
+
+        // Respawn player at spawn point
+        if (RespawnManager.instance != null && player != null)
+            RespawnManager.instance.Respawn(player);
+
+        // Reset Level6 timer
+        if (Level6Scripts.Level6Timer.Instance != null)
+            Level6Scripts.Level6Timer.Instance.StartTimer();
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        Debug.Log("DeathUI: Player respawned!");
+    }
+
+    public void RestartLevel()
+    {
+        Time.timeScale = 1f;
+
+        ResetPlayerHealth();
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
+        Debug.Log("DeathUI: Level restarted!");
+    }
+
+    private void ResetPlayerHealth()
+    {
+        GameObject playerObj = player;
+
+        if (playerObj == null)
+            playerObj = GameObject.FindGameObjectWithTag("Player");
+
+        if (playerObj == null && SceneTransitionManager.Instance != null)
+            playerObj = SceneTransitionManager.Instance.playerRoot;
+
+        if (playerObj != null)
         {
-            if (deathScreen != null)
-                deathScreen.SetActive(true);
-
-            Time.timeScale = 0f;
-
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-
-            Debug.Log("DeathUI: Death screen shown!");
-        }
-
-        public void Respawn()
-        {
-            Time.timeScale = 1f;
-
-            if (deathScreen != null)
-                deathScreen.SetActive(false);
-
-            if (openIntro != null)
-                openIntro.SetActive(false);
-
-            // Reset player health before respawning
-            ResetPlayerHealth();
-
-            if (RespawnManager.instance != null && player != null)
-                RespawnManager.instance.Respawn(player);
-
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
-
-        public void RestartLevel()
-        {
-            Time.timeScale = 1f;
-
-            // Reset player health before restarting
-            ResetPlayerHealth();
-
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
-
-        private void ResetPlayerHealth()
-        {
-            // Try assigned player first
-            GameObject playerObj = player;
-
-            // Fallback — find by tag
-            if (playerObj == null)
-                playerObj = GameObject.FindGameObjectWithTag("Player");
-
-            // Fallback — find via SceneTransitionManager
-            if (playerObj == null && SceneTransitionManager.Instance != null)
-                playerObj = SceneTransitionManager.Instance.playerRoot;
-
-            if (playerObj != null)
+            Player.Health ph = playerObj.GetComponentInChildren<Player.Health>()
+                                ?? playerObj.GetComponent<Player.Health>();
+            if (ph != null)
             {
-                Player.Health ph = playerObj.GetComponentInChildren<Player.Health>()
-                                   ?? playerObj.GetComponent<Player.Health>();
-                if (ph != null)
-                {
-                    ph.ResetHealth();
-                    Debug.Log("DeathUI: Player health reset!");
-                }
+                ph.ResetHealth();
+                Debug.Log("DeathUI: Player health reset!");
             }
         }
     }
