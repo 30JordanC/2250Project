@@ -31,13 +31,22 @@ namespace Level6Scripts
         {
             SoundManager.Instance?.PlayBackgroundMusic();
 
-            // Hide terra object at start
             if (terraObject != null)
                 terraObject.SetActive(false);
 
-            // Hide level complete panel at start
             if (levelCompletePanel != null)
                 levelCompletePanel.SetActive(false);
+
+            // Start challenge timer after 2 seconds
+            Invoke(nameof(StartChallengeTimer), 2f);
+        }
+
+        private void StartChallengeTimer()
+        {
+            if (TimerBomb.Instance != null)
+                TimerBomb.Instance.StartTimer();
+            else
+                Debug.LogWarning("Level6Manager: TimerBomb not found in scene!");
         }
 
         public void CollectSword()
@@ -51,22 +60,22 @@ namespace Level6Scripts
             if (bossDead) return;
             bossDead = true;
 
+            // Stop timer when ghost dies
+            if (TimerBomb.Instance != null)
+                TimerBomb.Instance.StopTimer();
+
             Debug.Log("Level6Manager: Ghost defeated! Terra pickup is now active.");
 
-            // Show terra stone
             if (terraObject != null)
                 terraObject.SetActive(true);
             else
                 Debug.LogWarning("Level6Manager: terraObject not assigned in Inspector.");
 
-            // Play victory music
             SoundManager.Instance?.CrossfadeMusic(null);
             SoundManager.Instance?.PlayVictoryMusic();
 
-            // Give player speed boost
             GivePlayerReward();
 
-            // Show level complete UI after delay
             Invoke(nameof(ShowLevelCompleteUI), 2f);
         }
 
@@ -122,12 +131,10 @@ namespace Level6Scripts
             SoundManager.Instance?.PlaySFX(SoundManager.SFX.LevelComplete);
             Debug.Log("Level6Manager: Level 6 Complete!");
 
-            // Removed auto scene load — player stays in level
-            // Uncomment below when ready to go back to intro:
+            // Uncomment when ready to load next scene:
             // Invoke(nameof(LoadIntroScene), 4f);
         }
 
-        // Uncomment when ready to use:
         // private void LoadIntroScene()
         // {
         //     if (SceneTransitionManager.Instance != null)

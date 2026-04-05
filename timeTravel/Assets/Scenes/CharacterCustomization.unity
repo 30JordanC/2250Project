@@ -2064,11 +2064,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55dcccd300174be79358abfd3e2a2aa6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Level6Scripts.PlayerAttackLevel6
-  attackRange: 2.5
+  attackRange: 5
   attackDamage: 25
   enemyLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
+  axeInHand: {fileID: 0}
+  playerAnimator: {fileID: 0}
+  attackCooldown: 0.5
 --- !u!1001 &1352255657133685961
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2146,11 +2149,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55dcccd300174be79358abfd3e2a2aa6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Level6Scripts.PlayerAttackLevel6
-  attackRange: 2.5
+  attackRange: 5
   attackDamage: 25
   enemyLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
+  axeInHand: {fileID: 0}
+  playerAnimator: {fileID: 0}
+  attackCooldown: 0.5
 --- !u!1001 &1668738284005154180
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2232,11 +2238,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55dcccd300174be79358abfd3e2a2aa6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Level6Scripts.PlayerAttackLevel6
-  attackRange: 2.5
+  attackRange: 5
   attackDamage: 25
   enemyLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
+  axeInHand: {fileID: 0}
+  playerAnimator: {fileID: 0}
+  attackCooldown: 0.5
 --- !u!1001 &6417195730259709386
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2318,11 +2327,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55dcccd300174be79358abfd3e2a2aa6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Level6Scripts.PlayerAttackLevel6
-  attackRange: 2.5
+  attackRange: 5
   attackDamage: 25
   enemyLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
+  axeInHand: {fileID: 0}
+  playerAnimator: {fileID: 0}
+  attackCooldown: 0.5
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
