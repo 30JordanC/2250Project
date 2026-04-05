@@ -15638,6 +15638,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StaffOfSobekneferu
   sceneToLoad: IntroScene
+  spawnID: IntroSpawn
 --- !u!64 &1481817706
 MeshCollider:
   m_ObjectHideFlags: 0

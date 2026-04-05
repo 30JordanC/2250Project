@@ -1,62 +1,34 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class StaffOfSobekneferu : MonoBehaviour
 {
     public string sceneToLoad;
+    public string spawnID; // ✅ set this in Inspector
 
-    private static bool shouldTeleportPlayer = false; // ✅ ADDED
+    private bool collected = false;
 
     private void OnTriggerEnter(Collider other)
     {
+        if (collected) return;
+
         if (other.CompareTag("Player"))
         {
+            collected = true;
+
             Debug.Log("Staff collected!");
 
-            shouldTeleportPlayer = true; // ✅ ADDED
-
+            // ✅ Hide staff immediately
             gameObject.SetActive(false);
 
-            SceneManager.sceneLoaded += OnSceneLoaded; // ✅ ADDED
-            SceneManager.LoadScene(sceneToLoad);
-        }
-    }
-
-    // ✅ ADDED
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        if (!shouldTeleportPlayer) return;
-
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-
-        if (player != null)
-        {
-            GameObject spawn = GameObject.FindGameObjectWithTag("SpawnPoint");
-
-            if (spawn != null)
+            // ✅ Use SceneTransitionManager
+            if (SceneTransitionManager.Instance != null)
             {
-                Rigidbody rb = player.GetComponent<Rigidbody>();
-
-                if (rb != null)
-                {
-                    rb.linearVelocity = Vector3.zero; // stop motion
-                    rb.angularVelocity = Vector3.zero;
-                    rb.position = spawn.transform.position; // ✅ physics-safe move
-                }
-                else
-                {
-                    player.transform.position = spawn.transform.position;
-                }
-
-                Debug.Log("Player teleported correctly after scene load");
+                SceneTransitionManager.Instance.LoadScene(sceneToLoad, spawnID);
             }
             else
             {
-                Debug.LogWarning("No SpawnPoint found!");
+                Debug.LogError("SceneTransitionManager not found!");
             }
         }
-
-        shouldTeleportPlayer = false;
-        SceneManager.sceneLoaded -= OnSceneLoaded; // clean up
     }
 }
