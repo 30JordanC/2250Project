@@ -6117,7 +6117,7 @@ MonoBehaviour:
   timerPanel: {fileID: 693049377}
   audioSource: {fileID: 0}
   tickSound: {fileID: 0}
-  urgentTickSound: {fileID: 0}
+  urgentTickSound: {fileID: 8300000, guid: 954b86f21215a4c78b1cb20928c7223c, type: 3}
 --- !u!4 &1753301043 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4275977967388256240, guid: b758874438391409ebb53a249c31fb06, type: 3}
