@@ -5,7 +5,7 @@ namespace Level6Scripts
     public class TerraPickupLevel6 : MonoBehaviour, IInteractable
     {
         [Header("Settings")]
-        public string interactText = "Collect Terra Artifact!";
+        public string interactText = "Press E to Collect Terra Artifact!";
 
         [Header("Require Axe")]
         public bool requireAxe = true;
@@ -47,22 +47,16 @@ namespace Level6Scripts
         {
             _collected = true;
 
-            // Play sound
             if (collectSound != null)
-            {
                 AudioSource.PlayClipAtPoint(collectSound, transform.position);
-            }
 
-            // Spawn effect
             if (collectEffect != null)
                 Instantiate(collectEffect, transform.position, Quaternion.identity);
 
-            // Play pickup sound
             SoundManager.Instance?.PlaySFX(SoundManager.SFX.PickupSword);
 
-            Debug.Log("TerraPickup: Terra Artifact collected! Level Complete!");
+            Debug.Log("TerraPickup: Terra Artifact collected!");
 
-            // Complete the level
             if (Level6Manager.Instance != null)
                 Level6Manager.Instance.TerraCollected();
 

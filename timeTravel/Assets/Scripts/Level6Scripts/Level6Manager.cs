@@ -14,10 +14,15 @@ namespace Level6Scripts
 
         [Header("Objects")]
         public GameObject terraObject;
+        public GameObject ghostEnemy;
 
         [Header("Level Complete UI")]
         public GameObject levelCompletePanel;
         public Text levelCompleteText;
+
+        [Header("Victory Music")]
+        public AudioClip victoryMusic;
+        public AudioSource musicSource;
 
         private void Awake()
         {
@@ -36,6 +41,12 @@ namespace Level6Scripts
 
             if (levelCompletePanel != null)
                 levelCompletePanel.SetActive(false);
+
+            if (musicSource == null)
+                musicSource = GetComponent<AudioSource>();
+
+            if (musicSource == null)
+                musicSource = gameObject.AddComponent<AudioSource>();
 
             Invoke(nameof(StartChallengeTimer), 2f);
         }
@@ -59,19 +70,61 @@ namespace Level6Scripts
             if (terraCollected) return;
             terraCollected = true;
 
+            // Stop timer
             if (Level6Timer.Instance != null)
                 Level6Timer.Instance.StopTimer();
 
-            Debug.Log("Level6Manager: Terra collected! Level Complete!");
+            // Play victory music
+            SoundManager.Instance?.CrossfadeMusic(null);
+            SoundManager.Instance?.PlayVictoryMusic();
 
+            // Weaken ghost visually
+            WeakenGhost();
+
+            // Give player reward
             GivePlayerReward();
 
-            Invoke(nameof(ShowLevelCompleteUI), 1f);
+            // Show level complete after delay
+            Invoke(nameof(ShowLevelCompleteUI), 1.5f);
+
+            Debug.Log("Level6Manager: Terra collected! Level Complete!");
         }
 
         public void BossDefeated()
         {
             TerraCollected();
+        }
+
+        private void WeakenGhost()
+        {
+            if (ghostEnemy == null)
+                ghostEnemy = GameObject.Find("GhostEnemy");
+
+            if (ghostEnemy != null)
+            {
+                // Disable ghost AI
+                EnemyAI ai = ghostEnemy.GetComponent<EnemyAI>();
+                if (ai != null)
+                    ai.enabled = false;
+
+                // Disable ghost health
+                EnemyHealth health = ghostEnemy.GetComponent<EnemyHealth>();
+                if (health != null)
+                    health.enabled = false;
+
+                // Make ghost fall and fade
+                Rigidbody rb = ghostEnemy.GetComponent<Rigidbody>();
+                if (rb != null)
+                {
+                    rb.constraints = RigidbodyConstraints.None;
+                    rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
+                }
+
+                // Destroy ghost after delay
+                Destroy(ghostEnemy, 3f);
+
+                Debug.Log("Level6Manager: Ghost lost its powers!");
+            }
         }
 
         private void GivePlayerReward()
@@ -90,11 +143,7 @@ namespace Level6Scripts
                     movement.sprintSpeed += 2f;
                     Debug.Log("Level6Manager: Player speed boosted!");
                 }
-                else
-                    Debug.LogWarning("Level6Manager: PlayerMovement not found.");
             }
-            else
-                Debug.LogWarning("Level6Manager: Player not found for reward.");
         }
 
         private void ShowLevelCompleteUI()
@@ -104,7 +153,12 @@ namespace Level6Scripts
                 levelCompletePanel.SetActive(true);
 
                 if (levelCompleteText != null)
-                    levelCompleteText.text = "Level Complete!\nTerra Artifact Collected!\nThe realm is saved!";
+                    levelCompleteText.text =
+                        "THE REALM IS FREED!\n\n" +
+                        "You have collected the Terra Artifact!\n" +
+                        "The ghost has lost its powers...\n" +
+                        "Balance has been restored to this world.\n\n" +
+                        "Well done, brave traveller!";
             }
 
             CompleteLevel();
@@ -119,7 +173,7 @@ namespace Level6Scripts
             Debug.Log("Level6Manager: Level 6 Complete!");
 
             // Uncomment to load next scene:
-            // Invoke(nameof(LoadIntroScene), 4f);
+            // Invoke(nameof(LoadIntroScene), 6f);
         }
 
         // private void LoadIntroScene()
