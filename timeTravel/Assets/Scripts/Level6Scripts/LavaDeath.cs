@@ -2,41 +2,34 @@ using UnityEngine;
 using Player;
 using Level6Scripts;
 
-namespace Level6Scripts
+public class LavaDeath : MonoBehaviour
 {
-    
+    public float damagePerSecond = 9999f;
 
-    public class LavaDeath : MonoBehaviour
+    private void OnTriggerEnter(Collider other)
     {
-        private void OnTriggerEnter(Collider other)
+        Debug.Log($"LavaDeath triggered by: {other.gameObject.name}");
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        // Keep damaging player every frame while in lava
+        Health ph = other.GetComponent<Health>()
+                    ?? other.GetComponentInParent<Health>()
+                    ?? other.GetComponentInChildren<Health>();
+        if (ph != null)
         {
-            // Kill player
-            Health ph = other.GetComponent<Health>()
-                        ?? other.GetComponentInParent<Health>()
-                        ?? other.GetComponentInChildren<Health>();
-            if (ph != null)
-            {
-                ph.TakeDamage(9999f);
-                Debug.Log("Player fell in lava and died!");
-                return;
-            }
+            ph.TakeDamage(damagePerSecond * Time.deltaTime);
+            return;
+        }
 
-            // Kill enemy
-            EnemyHealth eh = other.GetComponent<EnemyHealth>()
-                             ?? other.GetComponentInParent<EnemyHealth>();
-            if (eh != null)
-            {
-                eh.TakeDamage(9999f);
-                Debug.Log("Enemy fell in lava and died!");
-                return;
-            }
-
-            // Destroy anything else that falls in
-            if (other.gameObject != gameObject)
-            {
-                Destroy(other.gameObject);
-                Debug.Log($"{other.gameObject.name} destroyed by lava!");
-            }
+        // Keep damaging enemy every frame while in lava
+        EnemyHealth eh = other.GetComponent<EnemyHealth>()
+                         ?? other.GetComponentInParent<EnemyHealth>();
+        if (eh != null)
+        {
+            eh.TakeDamage(damagePerSecond * Time.deltaTime);
+            return;
         }
     }
 }

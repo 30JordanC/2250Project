@@ -11,30 +11,35 @@ namespace Player
         private float _lastDamagedTime;
         public DeathUI deathUI;
 
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
             currentHealth = maxHealth;
+
+            // Auto find DeathUI if not assigned
+            if (deathUI == null)
+                deathUI = FindFirstObjectByType<DeathUI>();
         }
 
-        // Update is called once per frame
         void Update()
         {
             if (Time.time > _lastDamagedTime + healthRegenDelay && currentHealth < maxHealth)
             {
-                Heal(passiveHealRate*Time.deltaTime);
+                Heal(passiveHealRate * Time.deltaTime);
             }
+
+            // Keep trying to find DeathUI if still null
+            if (deathUI == null)
+                deathUI = FindFirstObjectByType<DeathUI>();
         }
 
         public void TakeDamage(float amount)
         {
             currentHealth -= amount;
             currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
+            _lastDamagedTime = Time.time;
 
             if (currentHealth <= 0f)
-            {
                 Die();
-            }
         }
 
         public void Heal(float amount)
@@ -45,12 +50,16 @@ namespace Player
 
         public void Die()
         {
-            Debug.Log("Player died");
+            Debug.Log("Player died!");
+
+            // Try finding DeathUI one more time
+            if (deathUI == null)
+                deathUI = FindFirstObjectByType<DeathUI>();
 
             if (deathUI != null)
-            {
                 deathUI.ShowDeathScreen();
-            }
+            else
+                Debug.LogWarning("Health: DeathUI not found in scene!");
         }
     }
 }

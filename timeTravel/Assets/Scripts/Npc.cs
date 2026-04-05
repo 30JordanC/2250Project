@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using Level6Scripts;
 
 public class Npc : MonoBehaviour
 {
@@ -47,14 +48,12 @@ public class Npc : MonoBehaviour
 
         SetDialoguePanelActive(false);
 
-        // Auto add sphere collider trigger if missing
         SphereCollider trigger = GetComponent<SphereCollider>();
         if (trigger == null)
         {
             trigger = gameObject.AddComponent<SphereCollider>();
             trigger.radius = 5f;
             trigger.isTrigger = true;
-            Debug.Log("Npc: Added SphereCollider trigger automatically!");
         }
     }
 
@@ -62,11 +61,11 @@ public class Npc : MonoBehaviour
     {
         if (other.CompareTag("Enemy")) return;
         if (other.gameObject == gameObject) return;
+        if (NpcManager.AnyNpcTalking) return;
 
         if (!_isTalking)
         {
             _player = other.transform;
-            Debug.Log($"Npc: Triggered by {other.gameObject.name}");
             StartTalking();
         }
     }
@@ -82,21 +81,20 @@ public class Npc : MonoBehaviour
 
     private void Update()
     {
-        // Rotation removed — Golem stays in place
+        // Empty — no rotation
     }
 
     private void StartTalking()
     {
+        NpcManager.AnyNpcTalking = true;
         _isTalking = true;
         _dialogueIndex = 0;
-
         SetDialoguePanelActive(true);
 
         if (greetSound != null)
             PlaySound(greetSound);
 
         ShowLine(_dialogueIndex);
-        Debug.Log("Npc: StartTalking!");
     }
 
     private void AdvanceDialogue()
@@ -127,6 +125,7 @@ public class Npc : MonoBehaviour
 
     private void StopTalking()
     {
+        NpcManager.AnyNpcTalking = false;
         _isTalking = false;
 
         if (_typingCoroutine != null)
@@ -154,12 +153,10 @@ public class Npc : MonoBehaviour
         if (audioSource != null && audioSource.isPlaying)
             audioSource.Stop();
 
-        // Play matching voice clip
         if (voiceLines != null && index < voiceLines.Length && voiceLines[index] != null)
         {
             audioSource.clip = voiceLines[index];
             audioSource.Play();
-            Debug.Log($"Npc: Playing voice line {index}");
         }
 
         _typingCoroutine = StartCoroutine(TypeLine(dialogueLines[index]));
@@ -181,7 +178,6 @@ public class Npc : MonoBehaviour
         }
 
         _isTyping = false;
-
         _autoAdvanceCoroutine = StartCoroutine(AutoAdvance());
     }
 
