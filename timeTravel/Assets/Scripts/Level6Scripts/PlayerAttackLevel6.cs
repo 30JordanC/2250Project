@@ -4,9 +4,21 @@ namespace Level6Scripts
 {
     public class PlayerAttackLevel6 : MonoBehaviour
     {
+        [Header("Attack Settings")]
         public float attackRange = 2.5f;
         public float attackDamage = 25f;
         public LayerMask enemyLayer;
+
+        [Header("Axe Visual")]
+        public GameObject axeInHand;
+
+        [Header("Attack Animation")]
+        public Animator playerAnimator;
+
+        private static readonly int AttackTrigger = Animator.StringToHash("Attack");
+        private float _lastAttackTime;
+        public float attackCooldown = 0.5f;
+        private readonly Collider[] _hitBuffer = new Collider[10];
 
         private void Update()
         {
@@ -24,30 +36,35 @@ namespace Level6Scripts
 
             if (!Level6Manager.Instance.hasSword)
             {
-                Debug.Log("PlayerAttackLevel6: Pick up the sword first.");
+                Debug.Log("PlayerAttackLevel6: Pick up the axe first!");
                 return;
             }
 
-            // Play sword swing sound
+            if (Time.time < _lastAttackTime + attackCooldown) return;
+            _lastAttackTime = Time.time;
+
             SoundManager.Instance?.PlaySFX(SoundManager.SFX.SwordSwing);
 
-            Collider[] hits = Physics.OverlapSphere(transform.position, attackRange, enemyLayer);
+            if (playerAnimator != null)
+                playerAnimator.SetTrigger(AttackTrigger);
+
+            int hitCount = Physics.OverlapSphereNonAlloc(transform.position, attackRange, _hitBuffer, enemyLayer);
 
             bool hitSomething = false;
-            foreach (Collider hit in hits)
+            for (int i = 0; i < hitCount; i++)
             {
-                EnemyHealth enemy = hit.GetComponent<EnemyHealth>();
+                EnemyHealth enemy = _hitBuffer[i].GetComponent<EnemyHealth>();
                 if (enemy != null)
                 {
                     enemy.TakeDamage(attackDamage);
-                    SoundManager.Instance?.PlaySFXAt(SoundManager.SFX.SwordHit, hit.transform.position);
+                    SoundManager.Instance?.PlaySFXAt(SoundManager.SFX.SwordHit, _hitBuffer[i].transform.position);
                     hitSomething = true;
-                    Debug.Log($"Hit {hit.name} for {attackDamage} damage.");
+                    Debug.Log($"Hit {_hitBuffer[i].name} for {attackDamage} damage!");
                 }
             }
 
             if (!hitSomething)
-                Debug.Log("Swung but hit nothing. Is the golem on the Enemy Layer?");
+                Debug.Log("PlayerAttackLevel6: Swung but hit nothing. Is enemy on the Enemy Layer?");
         }
 
         private void OnDrawGizmosSelected()

@@ -17,113 +17,86 @@ public class Npc : MonoBehaviour
         "Go now, traveller. Time is running out!"
     };
 
-    [Header("Interaction")]
-    public float interactRange = 5f;
-    public KeyCode interactKey = KeyCode.E;
+    [Header("Voice Lines - one clip per dialogue line")]
+    public AudioClip[] voiceLines;
 
     [Header("UI - Assign in Inspector")]
     public GameObject dialoguePanel;
     public Text dialogueText;
-    public Text interactPromptText;
     public float typingSpeed = 0.04f;
-
-    [Header("Npc Behaviour")]
-    public bool lookAtPlayerWhenTalking = true;
-    public float rotationSpeed = 4f;
+    public float autoAdvanceDelay = 3f;
 
     [Header("Sounds")]
     public AudioSource audioSource;
-    public AudioClip talkSound;
     public AudioClip greetSound;
 
     private Transform _player;
     private int _dialogueIndex;
     private bool _isTalking;
-    private bool _playerInRange;
     private bool _isTyping;
     private Coroutine _typingCoroutine;
+    private Coroutine _autoAdvanceCoroutine;
 
     private void Start()
     {
         if (audioSource == null)
             audioSource = GetComponent<AudioSource>();
 
+        if (audioSource == null)
+            audioSource = gameObject.AddComponent<AudioSource>();
+
         SetDialoguePanelActive(false);
-        SetPromptActive(false);
+
+        // Auto add sphere collider trigger if missing
+        SphereCollider trigger = GetComponent<SphereCollider>();
+        if (trigger == null)
+        {
+            trigger = gameObject.AddComponent<SphereCollider>();
+            trigger.radius = 5f;
+            trigger.isTrigger = true;
+            Debug.Log("Npc: Added SphereCollider trigger automatically!");
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Enemy")) return;
+        if (other.gameObject == gameObject) return;
+
+        if (!_isTalking)
+        {
+            _player = other.transform;
+            Debug.Log($"Npc: Triggered by {other.gameObject.name}");
+            StartTalking();
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (_player != null && other.transform == _player)
+        {
+            StopTalking();
+            _player = null;
+        }
     }
 
     private void Update()
     {
-        if (_player == null)
-        {
-            FindPlayer();
-            return;
-        }
-
-        float distance = Vector3.Distance(transform.position, _player.position);
-
-        if (Time.frameCount % 60 == 0)
-        {
-            Debug.Log($"NPC Distance: {distance} | InRange: {_playerInRange} | Talking: {_isTalking} | Panel: {dialoguePanel != null} | Text: {dialogueText != null} | Prompt: {interactPromptText != null}");
-        }
-
-        _playerInRange = distance <= interactRange;
-
-        SetPromptActive(_playerInRange && !_isTalking);
-
-        if (_playerInRange && Input.GetKeyDown(interactKey))
-        {
-            if (_isTalking)
-                AdvanceDialogue();
-            else
-                StartTalking();
-        }
-
-        if (_isTalking && !_playerInRange)
-            StopTalking();
-
-        if (_isTalking && lookAtPlayerWhenTalking)
-            LookAtPlayer();
-    }
-
-    private void FindPlayer()
-    {
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-
-        if (playerObj == null)
-        {
-            foreach (GameObject obj in FindObjectsByType<GameObject>(FindObjectsSortMode.None))
-            {
-                if (obj.name == "PlayerRoot" || obj.name == "Player")
-                {
-                    playerObj = obj;
-                    Debug.Log($"Npc: Found player by name: {obj.name}");
-                    break;
-                }
-            }
-        }
-
-        if (playerObj != null)
-        {
-            _player = playerObj.transform;
-            Debug.Log($"Npc: Player assigned: {playerObj.name} | Tag: {playerObj.tag}");
-        }
-        else
-        {
-            if (Time.frameCount % 120 == 0)
-                Debug.LogWarning("Npc: Player not found yet, still searching...");
-        }
+        // Rotation removed — Golem stays in place
     }
 
     private void StartTalking()
     {
         _isTalking = true;
         _dialogueIndex = 0;
+
         SetDialoguePanelActive(true);
-        SetPromptActive(false);
-        PlaySound(greetSound);
+
+        if (greetSound != null)
+            PlaySound(greetSound);
+
         ShowLine(_dialogueIndex);
-        Debug.Log("Npc: StartTalking called!");
+        Debug.Log("Npc: StartTalking!");
     }
 
     private void AdvanceDialogue()
@@ -137,6 +110,10 @@ public class Npc : MonoBehaviour
                 dialogueText.text = dialogueLines[_dialogueIndex];
 
             _isTyping = false;
+
+            if (audioSource != null && audioSource.isPlaying)
+                audioSource.Stop();
+
             return;
         }
 
@@ -155,8 +132,13 @@ public class Npc : MonoBehaviour
         if (_typingCoroutine != null)
             StopCoroutine(_typingCoroutine);
 
+        if (_autoAdvanceCoroutine != null)
+            StopCoroutine(_autoAdvanceCoroutine);
+
+        if (audioSource != null && audioSource.isPlaying)
+            audioSource.Stop();
+
         SetDialoguePanelActive(false);
-        SetPromptActive(false);
     }
 
     private void ShowLine(int index)
@@ -165,6 +147,20 @@ public class Npc : MonoBehaviour
 
         if (_typingCoroutine != null)
             StopCoroutine(_typingCoroutine);
+
+        if (_autoAdvanceCoroutine != null)
+            StopCoroutine(_autoAdvanceCoroutine);
+
+        if (audioSource != null && audioSource.isPlaying)
+            audioSource.Stop();
+
+        // Play matching voice clip
+        if (voiceLines != null && index < voiceLines.Length && voiceLines[index] != null)
+        {
+            audioSource.clip = voiceLines[index];
+            audioSource.Play();
+            Debug.Log($"Npc: Playing voice line {index}");
+        }
 
         _typingCoroutine = StartCoroutine(TypeLine(dialogueLines[index]));
     }
@@ -181,28 +177,27 @@ public class Npc : MonoBehaviour
             if (dialogueText != null)
                 dialogueText.text += c;
 
-            if (talkSound != null && audioSource != null && c != ' ')
-                audioSource.PlayOneShot(talkSound, 0.3f);
-
             yield return new WaitForSeconds(typingSpeed);
         }
 
         _isTyping = false;
+
+        _autoAdvanceCoroutine = StartCoroutine(AutoAdvance());
     }
 
-    private void LookAtPlayer()
+    private IEnumerator AutoAdvance()
     {
-        Vector3 direction = _player.position - transform.position;
-        direction.y = 0f;
+        if (audioSource != null && audioSource.isPlaying)
+        {
+            while (audioSource.isPlaying)
+                yield return null;
+        }
+        else
+        {
+            yield return new WaitForSeconds(autoAdvanceDelay);
+        }
 
-        if (direction.sqrMagnitude < 0.01f) return;
-
-        Quaternion targetRotation = Quaternion.LookRotation(direction);
-        transform.rotation = Quaternion.Slerp(
-            transform.rotation,
-            targetRotation,
-            rotationSpeed * Time.deltaTime
-        );
+        AdvanceDialogue();
     }
 
     private void SetDialoguePanelActive(bool active)
@@ -210,15 +205,7 @@ public class Npc : MonoBehaviour
         if (dialoguePanel != null)
             dialoguePanel.SetActive(active);
         else
-            Debug.LogWarning("Npc: DialoguePanel is not assigned in Inspector!");
-    }
-
-    private void SetPromptActive(bool active)
-    {
-        if (interactPromptText != null)
-            interactPromptText.gameObject.SetActive(active);
-        else
-            Debug.LogWarning("Npc: InteractPromptText is not assigned in Inspector!");
+            Debug.LogWarning("Npc: DialoguePanel not assigned!");
     }
 
     private void PlaySound(AudioClip clip)
@@ -229,7 +216,7 @@ public class Npc : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, interactRange);
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(transform.position, 5f);
     }
 }
