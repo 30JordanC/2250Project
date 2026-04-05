@@ -1,43 +1,83 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class DeathUI : MonoBehaviour
+namespace Level2Scripts
 {
-    public GameObject deathScreen;
-    public GameObject player;
-    public GameObject openIntro;
-
-    public void ShowDeathScreen()
+    public class DeathUI : MonoBehaviour
     {
-        deathScreen.SetActive(true);
-        Time.timeScale = 0f; // pause game
+        public GameObject deathScreen;
+        public GameObject player;
+        public GameObject openIntro;
 
-        // Unlock cursor (like your puzzle)
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-    }
+        public void ShowDeathScreen()
+        {
+            if (deathScreen != null)
+                deathScreen.SetActive(true);
 
-    public void Respawn()
-    {
-        Time.timeScale = 1f;
-        deathScreen.SetActive(false);
-        openIntro.SetActive(false);
+            Time.timeScale = 0f;
 
-        RespawnManager.instance.Respawn(player);
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
 
-        // Lock cursor again
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-    }
+            Debug.Log("DeathUI: Death screen shown!");
+        }
 
-    public void RestartLevel()
-    {
-        Time.timeScale = 1f;
+        public void Respawn()
+        {
+            Time.timeScale = 1f;
 
-        // Lock cursor again BEFORE reloading
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+            if (deathScreen != null)
+                deathScreen.SetActive(false);
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            if (openIntro != null)
+                openIntro.SetActive(false);
+
+            // Reset player health before respawning
+            ResetPlayerHealth();
+
+            if (RespawnManager.instance != null && player != null)
+                RespawnManager.instance.Respawn(player);
+
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+
+        public void RestartLevel()
+        {
+            Time.timeScale = 1f;
+
+            // Reset player health before restarting
+            ResetPlayerHealth();
+
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+
+        private void ResetPlayerHealth()
+        {
+            // Try assigned player first
+            GameObject playerObj = player;
+
+            // Fallback — find by tag
+            if (playerObj == null)
+                playerObj = GameObject.FindGameObjectWithTag("Player");
+
+            // Fallback — find via SceneTransitionManager
+            if (playerObj == null && SceneTransitionManager.Instance != null)
+                playerObj = SceneTransitionManager.Instance.playerRoot;
+
+            if (playerObj != null)
+            {
+                Player.Health ph = playerObj.GetComponentInChildren<Player.Health>()
+                                   ?? playerObj.GetComponent<Player.Health>();
+                if (ph != null)
+                {
+                    ph.ResetHealth();
+                    Debug.Log("DeathUI: Player health reset!");
+                }
+            }
+        }
     }
 }

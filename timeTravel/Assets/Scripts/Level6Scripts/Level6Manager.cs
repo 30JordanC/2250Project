@@ -9,7 +9,7 @@ namespace Level6Scripts
 
         [Header("State")]
         public bool hasSword;
-        public bool bossDead;
+        public bool terraCollected;
         public bool levelComplete;
 
         [Header("Objects")]
@@ -32,63 +32,54 @@ namespace Level6Scripts
             SoundManager.Instance?.PlayBackgroundMusic();
 
             if (terraObject != null)
-                terraObject.SetActive(false);
+                terraObject.SetActive(true);
 
             if (levelCompletePanel != null)
                 levelCompletePanel.SetActive(false);
 
-            // Start challenge timer after 2 seconds
             Invoke(nameof(StartChallengeTimer), 2f);
         }
 
         private void StartChallengeTimer()
         {
-            if (TimerBomb.Instance != null)
-                TimerBomb.Instance.StartTimer();
+            if (Level6Timer.Instance != null)
+                Level6Timer.Instance.StartTimer();
             else
-                Debug.LogWarning("Level6Manager: TimerBomb not found in scene!");
+                Debug.LogWarning("Level6Manager: Level6Timer not found!");
         }
 
         public void CollectSword()
         {
             hasSword = true;
-            Debug.Log("Level6Manager: Axe collected! Press F to attack.");
+            Debug.Log("Level6Manager: Axe collected! Press F to stun ghost, collect Terra!");
+        }
+
+        public void TerraCollected()
+        {
+            if (terraCollected) return;
+            terraCollected = true;
+
+            if (Level6Timer.Instance != null)
+                Level6Timer.Instance.StopTimer();
+
+            Debug.Log("Level6Manager: Terra collected! Level Complete!");
+
+            GivePlayerReward();
+
+            Invoke(nameof(ShowLevelCompleteUI), 1f);
         }
 
         public void BossDefeated()
         {
-            if (bossDead) return;
-            bossDead = true;
-
-            // Stop timer when ghost dies
-            if (TimerBomb.Instance != null)
-                TimerBomb.Instance.StopTimer();
-
-            Debug.Log("Level6Manager: Ghost defeated! Terra pickup is now active.");
-
-            if (terraObject != null)
-                terraObject.SetActive(true);
-            else
-                Debug.LogWarning("Level6Manager: terraObject not assigned in Inspector.");
-
-            SoundManager.Instance?.CrossfadeMusic(null);
-            SoundManager.Instance?.PlayVictoryMusic();
-
-            GivePlayerReward();
-
-            Invoke(nameof(ShowLevelCompleteUI), 2f);
+            TerraCollected();
         }
 
         private void GivePlayerReward()
         {
             GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
 
-            if (playerObj == null)
-            {
-                if (SceneTransitionManager.Instance != null &&
-                    SceneTransitionManager.Instance.playerRoot != null)
-                    playerObj = SceneTransitionManager.Instance.playerRoot;
-            }
+            if (playerObj == null && SceneTransitionManager.Instance != null)
+                playerObj = SceneTransitionManager.Instance.playerRoot;
 
             if (playerObj != null)
             {
@@ -97,17 +88,13 @@ namespace Level6Scripts
                 {
                     movement.walkSpeed += 1f;
                     movement.sprintSpeed += 2f;
-                    Debug.Log("Level6Manager: Player speed boosted as reward!");
+                    Debug.Log("Level6Manager: Player speed boosted!");
                 }
                 else
-                {
-                    Debug.LogWarning("Level6Manager: PlayerMovement not found on player.");
-                }
+                    Debug.LogWarning("Level6Manager: PlayerMovement not found.");
             }
             else
-            {
                 Debug.LogWarning("Level6Manager: Player not found for reward.");
-            }
         }
 
         private void ShowLevelCompleteUI()
@@ -117,7 +104,7 @@ namespace Level6Scripts
                 levelCompletePanel.SetActive(true);
 
                 if (levelCompleteText != null)
-                    levelCompleteText.text = "Level Complete!\nThe ghost has been defeated!\nTerra Stone revealed!";
+                    levelCompleteText.text = "Level Complete!\nTerra Artifact Collected!\nThe realm is saved!";
             }
 
             CompleteLevel();
@@ -131,7 +118,7 @@ namespace Level6Scripts
             SoundManager.Instance?.PlaySFX(SoundManager.SFX.LevelComplete);
             Debug.Log("Level6Manager: Level 6 Complete!");
 
-            // Uncomment when ready to load next scene:
+            // Uncomment to load next scene:
             // Invoke(nameof(LoadIntroScene), 4f);
         }
 

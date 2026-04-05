@@ -1,35 +1,30 @@
-using UnityEngine;
 using Player;
-using Level6Scripts;
+using UnityEngine;
 
-public class LavaDeath : MonoBehaviour
+namespace Level6Scripts
 {
-    public float damagePerSecond = 9999f;
-
-    private void OnTriggerEnter(Collider other)
+    public class LavaDeath : MonoBehaviour
     {
-        Debug.Log($"LavaDeath triggered by: {other.gameObject.name}");
-    }
-
-    private void OnTriggerStay(Collider other)
-    {
-        // Keep damaging player every frame while in lava
-        Health ph = other.GetComponent<Health>()
-                    ?? other.GetComponentInParent<Health>()
-                    ?? other.GetComponentInChildren<Health>();
-        if (ph != null)
+        private void OnTriggerStay(Collider other)
         {
-            ph.TakeDamage(damagePerSecond * Time.deltaTime);
-            return;
-        }
+            // Kill player
+            Health ph = other.GetComponent<Health>()
+                        ?? other.GetComponentInParent<Health>()
+                        ?? other.GetComponentInChildren<Health>();
+            if (ph != null)
+            {
+                ph.TakeDamage(9999f);
+                return;
+            }
 
-        // Keep damaging enemy every frame while in lava
-        EnemyHealth eh = other.GetComponent<EnemyHealth>()
-                         ?? other.GetComponentInParent<EnemyHealth>();
-        if (eh != null)
-        {
-            eh.TakeDamage(damagePerSecond * Time.deltaTime);
-            return;
+            // Kill enemy
+            EnemyHealth eh = other.GetComponent<EnemyHealth>()
+                             ?? other.GetComponentInParent<EnemyHealth>();
+            if (eh != null)
+            {
+                eh.TakeDamage(9999f);
+                return;
+            }
         }
     }
 }

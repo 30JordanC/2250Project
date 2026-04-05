@@ -1,3 +1,4 @@
+using Level2Scripts;
 using UnityEngine;
 
 namespace Player
@@ -10,33 +11,37 @@ namespace Player
         public float healthRegenDelay;
         private float _lastDamagedTime;
         public DeathUI deathUI;
+        private bool _isDead;
 
         void Start()
         {
+            _isDead = false;
             currentHealth = maxHealth;
 
-            // Auto find DeathUI if not assigned
             if (deathUI == null)
                 deathUI = FindFirstObjectByType<DeathUI>();
         }
 
         void Update()
         {
-            if (Time.time > _lastDamagedTime + healthRegenDelay && currentHealth < maxHealth)
-            {
-                Heal(passiveHealRate * Time.deltaTime);
-            }
+            if (_isDead) return;
 
-            // Keep trying to find DeathUI if still null
+            if (Time.time > _lastDamagedTime + healthRegenDelay && currentHealth < maxHealth)
+                Heal(passiveHealRate * Time.deltaTime);
+
             if (deathUI == null)
                 deathUI = FindFirstObjectByType<DeathUI>();
         }
 
         public void TakeDamage(float amount)
         {
+            if (_isDead) return;
+
             currentHealth -= amount;
             currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
             _lastDamagedTime = Time.time;
+
+            Debug.Log($"Player took {amount} damage! Health: {currentHealth}");
 
             if (currentHealth <= 0f)
                 Die();
@@ -44,15 +49,19 @@ namespace Player
 
         public void Heal(float amount)
         {
+            if (_isDead) return;
+
             currentHealth += amount;
             currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
         }
 
         public void Die()
         {
+            if (_isDead) return;
+            _isDead = true;
+
             Debug.Log("Player died!");
 
-            // Try finding DeathUI one more time
             if (deathUI == null)
                 deathUI = FindFirstObjectByType<DeathUI>();
 
@@ -60,6 +69,13 @@ namespace Player
                 deathUI.ShowDeathScreen();
             else
                 Debug.LogWarning("Health: DeathUI not found in scene!");
+        }
+
+        public void ResetHealth()
+        {
+            _isDead = false;
+            currentHealth = maxHealth;
+            Debug.Log("Health: Player health reset!");
         }
     }
 }

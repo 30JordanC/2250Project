@@ -5,7 +5,7 @@ namespace Level6Scripts
     public class PlayerAttackLevel6 : MonoBehaviour
     {
         [Header("Attack Settings")]
-        public float attackRange = 2.5f;
+        public float attackRange = 8f;
         public float attackDamage = 25f;
         public LayerMask enemyLayer;
 
@@ -48,23 +48,44 @@ namespace Level6Scripts
             if (playerAnimator != null)
                 playerAnimator.SetTrigger(AttackTrigger);
 
-            int hitCount = Physics.OverlapSphereNonAlloc(transform.position, attackRange, _hitBuffer, enemyLayer);
+            Debug.Log($"Attacking! Range: {attackRange} Layer: {enemyLayer.value}");
+
+            int hitCount = Physics.OverlapSphereNonAlloc(
+                transform.position,
+                attackRange,
+                _hitBuffer,
+                enemyLayer
+            );
+
+            Debug.Log($"Hit count: {hitCount}");
 
             bool hitSomething = false;
             for (int i = 0; i < hitCount; i++)
             {
-                EnemyHealth enemy = _hitBuffer[i].GetComponent<EnemyHealth>();
+                EnemyHealth enemy = _hitBuffer[i].GetComponent<EnemyHealth>()
+                                    ?? _hitBuffer[i].GetComponentInParent<EnemyHealth>()
+                                    ?? _hitBuffer[i].GetComponentInChildren<EnemyHealth>();
+
                 if (enemy != null)
                 {
                     enemy.TakeDamage(attackDamage);
-                    SoundManager.Instance?.PlaySFXAt(SoundManager.SFX.SwordHit, _hitBuffer[i].transform.position);
+                    SoundManager.Instance?.PlaySFXAt(
+                        SoundManager.SFX.SwordHit,
+                        _hitBuffer[i].transform.position
+                    );
                     hitSomething = true;
                     Debug.Log($"Hit {_hitBuffer[i].name} for {attackDamage} damage!");
                 }
+
+                // Stun ghost — push it back
+                GhostStun ghost = _hitBuffer[i].GetComponent<GhostStun>()
+                                  ?? _hitBuffer[i].GetComponentInParent<GhostStun>();
+                if (ghost != null)
+                    ghost.Stun();
             }
 
             if (!hitSomething)
-                Debug.Log("PlayerAttackLevel6: Swung but hit nothing. Is enemy on the Enemy Layer?");
+                Debug.Log("PlayerAttackLevel6: Hit nothing! Is ghost on Enemy layer?");
         }
 
         private void OnDrawGizmosSelected()
