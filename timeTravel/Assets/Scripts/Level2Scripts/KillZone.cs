@@ -13,7 +13,7 @@ public class KillZone : MonoBehaviour
 
             if (health != null)
             {
-                health.TakeDamage(9999f); // instant kill
+                health.TakeDamage(99999f); // instant kill
             }
         }
     }

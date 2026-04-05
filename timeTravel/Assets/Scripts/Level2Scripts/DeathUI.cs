@@ -7,6 +7,19 @@ public class DeathUI : MonoBehaviour
     public GameObject player;
     public GameObject openIntro;
 
+    void Start()
+    {
+        player = GameObject.FindGameObjectWithTag("Player");
+
+        if (player != null)
+        {
+            Debug.Log("Player assigned to DeathUI: " + player.name);
+        }
+        else
+        {
+            Debug.LogError("No Player found!");
+        }
+    }
     public void ShowDeathScreen()
     {
         deathScreen.SetActive(true);
