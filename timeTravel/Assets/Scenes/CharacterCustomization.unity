@@ -2035,6 +2035,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player_MiddleLook
       objectReference: {fileID: 0}
+    - target: {fileID: 4268485321836110747, guid: 1f2e61200b43d4e668fbdb39ac1bef8c, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2149,6 +2153,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player_FemaleLook
       objectReference: {fileID: 0}
+    - target: {fileID: 5206972622865841343, guid: 7dbfe568c13b44b7ab98e5b6207f5dd9, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2205,6 +2213,10 @@ PrefabInstance:
     - target: {fileID: 7641040328662365432, guid: 865e6381ae8b543e18ede7a0eef9044d, type: 3}
       propertyPath: m_Name
       value: Player_MaleLook
+      objectReference: {fileID: 0}
+    - target: {fileID: 7641040328662365432, guid: 865e6381ae8b543e18ede7a0eef9044d, type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
