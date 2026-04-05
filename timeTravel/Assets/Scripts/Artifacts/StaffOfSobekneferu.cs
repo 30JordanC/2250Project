@@ -3,7 +3,7 @@ using UnityEngine;
 public class StaffOfSobekneferu : MonoBehaviour
 {
     public string sceneToLoad;
-    public string spawnID; // ✅ set this in Inspector
+    public string spawnID; 
 
     private bool collected = false;
 
@@ -16,11 +16,9 @@ public class StaffOfSobekneferu : MonoBehaviour
             collected = true;
 
             Debug.Log("Staff collected!");
-
-            // ✅ Hide staff immediately
+            
             gameObject.SetActive(false);
-
-            // ✅ Use SceneTransitionManager
+            
             if (SceneTransitionManager.Instance != null)
             {
                 SceneTransitionManager.Instance.LoadScene(sceneToLoad, spawnID);

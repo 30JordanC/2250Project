@@ -42,9 +42,6 @@ public class Dog : Enemy
 
         Vector3 direction = target.position - transform.position;
 
-        // 🔥 CRITICAL FIX
-        direction.y = 0;
-
         direction = direction.normalized;
 
         // Rotate

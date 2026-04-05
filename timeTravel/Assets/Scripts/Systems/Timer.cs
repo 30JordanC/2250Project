@@ -58,13 +58,13 @@ public class Timer : MonoBehaviour
     {
         Debug.Log("Out of time!");
 
-        // 👇 SHOW YOUR DEATH SCREEN DIRECTLY
+        // SHOW YOUR DEATH SCREEN DIRECTLY
         if (timeUpScreen != null)
         {
             timeUpScreen.SetActive(true);
         }
 
-        // 👇 PAUSE GAME
+        // PAUSE GAME
         Time.timeScale = 0f;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;

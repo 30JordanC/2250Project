@@ -11,7 +11,7 @@ public class openIntro : MonoBehaviour
             // Show intro UI
             introPanel.SetActive(true);
 
-            // Pause game (optional but recommended)
+            // Pause game 
             Time.timeScale = 0f;
 
             // Unlock cursor so player can click

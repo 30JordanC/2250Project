@@ -14,22 +14,21 @@ public class RespawnManager : MonoBehaviour
     public void SetCheckpoint(Transform checkpoint)
     {
         currentCheckpoint = checkpoint;
-        Debug.Log("Checkpoint set to: " + checkpoint.position); // ✅ ADDED (debug)
+        Debug.Log("Checkpoint set to: " + checkpoint.position); 
     }
 
     public void Respawn(GameObject player)
     {
         if (currentCheckpoint != null)
         {
-            TeleportPlayer(player, currentCheckpoint.position); // ✅ UPDATED
+            TeleportPlayer(player, currentCheckpoint.position); 
         }
         else
         {
             Debug.Log("No checkpoint set!");
         }
     }
-
-    // ✅ FIXED (uses currentCheckpoint instead of non-existent variable)
+    
     public Vector3 GetRespawnPosition()
     {
         if (currentCheckpoint != null)
@@ -40,8 +39,7 @@ public class RespawnManager : MonoBehaviour
         Debug.LogWarning("No checkpoint set! Returning zero.");
         return Vector3.zero;
     }
-
-    // ✅ 🔥 SAME SAFE TELEPORT LOGIC (like your staff fix)
+    
     private void TeleportPlayer(GameObject player, Vector3 position)
     {
         Rigidbody rb = player.GetComponentInChildren<Rigidbody>();
@@ -53,8 +51,7 @@ public class RespawnManager : MonoBehaviour
 
             rb.position = position; // move physics body
         }
-
-        // ✅ ALWAYS move root object too
+        
         player.transform.position = position;
 
         Debug.Log("Player teleported to: " + position);
