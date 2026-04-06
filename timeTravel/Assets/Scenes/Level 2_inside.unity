@@ -15850,7 +15850,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: affee341f81f7f14db1ad8c2d82f69fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObtainArtifact
-  interactText: Press E to pick up Staff Of Sob
+  interactText: Press E to pick up Staff Of Sobekneferu
 --- !u!1 &1492535426
 GameObject:
   m_ObjectHideFlags: 0
