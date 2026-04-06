@@ -31627,7 +31627,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScenePortal
   sceneName: IntroScene
-  spawnID: SceneTransitionManager
+  spawnID: SpawnPoint
 --- !u!1001 &1644249141
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -34066,8 +34066,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NpcDialogue
   dialogueLines:
   - Welcome to the Trial for the ChronoPrism! To obtain it, one must pass through
-    the three brown puzzle doors. Simply walk up to it, input the correct solution,
-    and after all 3 are done, the Prism shall be yours. Best of luck!
+    the three brown puzzle doors. Simply walk up to them, make sure all the pipes
+    connect, and after all 3 are done, the Prism shall be yours. Best of luck!
   dialoguePanel: {fileID: 0}
   dialogueText: {fileID: 1476799572}
   typingSpeed: 0.04
