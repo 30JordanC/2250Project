@@ -20,11 +20,12 @@ public class HotbarUI : MonoBehaviour
     private List<HotbarSlotUI> slotUIs = new List<HotbarSlotUI>();
     private int selectedIndex = 0;
 
-    void Awake()
-    {
-        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
-        Instance = this;
-    }
+   void Awake()
+{
+    if (Instance != null && Instance != this) { Destroy(gameObject); return; }
+    Instance = this;
+    gameObject.SetActive(false); // hidden by default!
+}
 
     void Start()
     {
