@@ -8701,7 +8701,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3466790824134753610, guid: b758874438391409ebb53a249c31fb06, type: 3}
       propertyPath: m_Name
-      value: Weapon-LeagondaryAxe
+      value: Weapon-Axe
       objectReference: {fileID: 0}
     - target: {fileID: 4275977967388256240, guid: b758874438391409ebb53a249c31fb06, type: 3}
       propertyPath: m_LocalPosition.x
