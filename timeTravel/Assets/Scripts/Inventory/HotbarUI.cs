@@ -24,7 +24,7 @@ public class HotbarUI : MonoBehaviour
 {
     if (Instance != null && Instance != this) { Destroy(gameObject); return; }
     Instance = this;
-    gameObject.SetActive(false); // hidden by default!
+    gameObject.SetActive(true); 
 }
 
     void Start()
