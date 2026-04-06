@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class ObtainArtifact : MonoBehaviour, IInteractable
 {
+    public string interactText = "Press E to pick up <artifactName>";
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -21,7 +23,7 @@ public class ObtainArtifact : MonoBehaviour, IInteractable
 
     public string GetInteractText()
     {
-        return "Press E to pick up T. Rex egg";
+        return interactText;
     }
 
     public void Interact()
