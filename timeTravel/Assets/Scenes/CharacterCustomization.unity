@@ -2042,8 +2042,36 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4268485321836110747, guid: 1f2e61200b43d4e668fbdb39ac1bef8c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1303471591736207978}
   m_SourcePrefab: {fileID: 100100000, guid: 1f2e61200b43d4e668fbdb39ac1bef8c, type: 3}
+--- !u!1 &1303471591736207977 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4268485321836110747, guid: 1f2e61200b43d4e668fbdb39ac1bef8c, type: 3}
+  m_PrefabInstance: {fileID: 1303471591736207976}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1303471591736207978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1303471591736207977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55dcccd300174be79358abfd3e2a2aa6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Level6Scripts.PlayerAttackLevel6
+  attackRange: 5
+  attackDamage: 25
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  axeInHand: {fileID: 0}
+  playerAnimator: {fileID: 0}
+  attackCooldown: 0.5
 --- !u!1001 &1352255657133685961
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2099,8 +2127,36 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5167229288776630781, guid: 75867832c653d4154a527cd60c3a0b1e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1352255657133685963}
   m_SourcePrefab: {fileID: 100100000, guid: 75867832c653d4154a527cd60c3a0b1e, type: 3}
+--- !u!1 &1352255657133685962 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5167229288776630781, guid: 75867832c653d4154a527cd60c3a0b1e, type: 3}
+  m_PrefabInstance: {fileID: 1352255657133685961}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1352255657133685963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1352255657133685962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55dcccd300174be79358abfd3e2a2aa6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Level6Scripts.PlayerAttackLevel6
+  attackRange: 5
+  attackDamage: 25
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  axeInHand: {fileID: 0}
+  playerAnimator: {fileID: 0}
+  attackCooldown: 0.5
 --- !u!1001 &1668738284005154180
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2160,8 +2216,36 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5206972622865841343, guid: 7dbfe568c13b44b7ab98e5b6207f5dd9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1668738284005154182}
   m_SourcePrefab: {fileID: 100100000, guid: 7dbfe568c13b44b7ab98e5b6207f5dd9, type: 3}
+--- !u!1 &1668738284005154181 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5206972622865841343, guid: 7dbfe568c13b44b7ab98e5b6207f5dd9, type: 3}
+  m_PrefabInstance: {fileID: 1668738284005154180}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1668738284005154182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668738284005154181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55dcccd300174be79358abfd3e2a2aa6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Level6Scripts.PlayerAttackLevel6
+  attackRange: 5
+  attackDamage: 25
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  axeInHand: {fileID: 0}
+  playerAnimator: {fileID: 0}
+  attackCooldown: 0.5
 --- !u!1001 &6417195730259709386
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2221,8 +2305,36 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7641040328662365432, guid: 865e6381ae8b543e18ede7a0eef9044d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6417195730259709388}
   m_SourcePrefab: {fileID: 100100000, guid: 865e6381ae8b543e18ede7a0eef9044d, type: 3}
+--- !u!1 &6417195730259709387 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7641040328662365432, guid: 865e6381ae8b543e18ede7a0eef9044d, type: 3}
+  m_PrefabInstance: {fileID: 6417195730259709386}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6417195730259709388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6417195730259709387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55dcccd300174be79358abfd3e2a2aa6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Level6Scripts.PlayerAttackLevel6
+  attackRange: 5
+  attackDamage: 25
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  axeInHand: {fileID: 0}
+  playerAnimator: {fileID: 0}
+  attackCooldown: 0.5
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
