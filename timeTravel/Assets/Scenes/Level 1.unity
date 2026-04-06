@@ -903,6 +903,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 40084e56aed2e134ab3887f2d005d728, type: 3}
       insertIndex: -1
       addedObject: {fileID: 67785869}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 40084e56aed2e134ab3887f2d005d728, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 67785870}
   m_SourcePrefab: {fileID: 100100000, guid: 40084e56aed2e134ab3887f2d005d728, type: 3}
 --- !u!1 &67785867 stripped
 GameObject:
@@ -921,6 +924,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: affee341f81f7f14db1ad8c2d82f69fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObtainArtifact
+  interactText: Press E to pick up <artifactName>
 --- !u!135 &67785869
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -942,6 +946,19 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 2
   m_Center: {x: 0, y: 0, z: 2}
+--- !u!114 &67785870
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 67785867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a501eb6e0ba8c9545b6fe2f302867e21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemIcon
+  icon: {fileID: 21300000, guid: 3b2a49f0de331e049b568831b7ba6294, type: 3}
 --- !u!1001 &72745917
 PrefabInstance:
   m_ObjectHideFlags: 0
