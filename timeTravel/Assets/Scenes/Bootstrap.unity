@@ -4726,6 +4726,7 @@ GameObject:
   - component: {fileID: 1904704159}
   - component: {fileID: 1904704157}
   - component: {fileID: 1904704158}
+  - component: {fileID: 1904704164}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -4889,6 +4890,20 @@ Transform:
   - {fileID: 1161927243}
   m_Father: {fileID: 1495701568}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1904704164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1904704156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3210ea4f869f9064a8a47b9eb95feefa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Stealth
+  isCrouching: 0
+  isHidden: 0
 --- !u!1 &2009552522
 GameObject:
   m_ObjectHideFlags: 0
