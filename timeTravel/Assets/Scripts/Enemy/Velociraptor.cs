@@ -1,3 +1,4 @@
+using Player;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -196,8 +197,8 @@ public class Velociraptor : MonoBehaviour
     void DealDamage()
     {
         if (playerDead) return;
-
         Health health = player.GetComponent<Health>();
+        
         if (health != null)
         {
             playerDead = true;

@@ -26,7 +26,6 @@ public class ObtainArtifact : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        Destroy(gameObject);
-        SceneTransitionManager.Instance.LoadScene("IntroScene", "Spawn");
+        SceneTransitionManager.Instance.LoadScene("IntroScene", "IntroSpawn");
     }
 }
