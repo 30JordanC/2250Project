@@ -36,9 +36,7 @@ public class DeathUI : MonoBehaviour
             openIntro.SetActive(false);
 
         ResetPlayerHealth();
-
-        if (RespawnManager.instance != null && player != null)
-            RespawnManager.instance.Respawn(player);
+        MovePlayerToCheckpoint();
 
         // Restart timer
         if (Level6Scripts.Level6Timer.Instance != null)
@@ -47,12 +45,16 @@ public class DeathUI : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        Debug.Log("DeathUI: Player respawned!");
+        Debug.Log("DeathUI: Player respawned at checkpoint!");
     }
 
     public void RestartLevel()
     {
         Time.timeScale = 1f;
+
+        // Reset checkpoint
+        Level6Scripts.Checkpoint.LastCheckpointPosition = Vector3.zero;
+
         ResetPlayerHealth();
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -63,15 +65,37 @@ public class DeathUI : MonoBehaviour
         Debug.Log("DeathUI: Level restarted!");
     }
 
+    private void MovePlayerToCheckpoint()
+    {
+        if (Level6Scripts.Checkpoint.LastCheckpointPosition == Vector3.zero)
+            return;
+
+        GameObject playerObj = GetPlayer();
+
+        if (playerObj != null)
+        {
+            // Move player to last checkpoint
+            Rigidbody rb = playerObj.GetComponentInChildren<Rigidbody>()
+                           ?? playerObj.GetComponent<Rigidbody>();
+
+            if (rb != null)
+            {
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+                rb.position = Level6Scripts.Checkpoint.LastCheckpointPosition;
+                Debug.Log("DeathUI: Player moved to checkpoint!");
+            }
+            else
+            {
+                playerObj.transform.position =
+                    Level6Scripts.Checkpoint.LastCheckpointPosition;
+            }
+        }
+    }
+
     private void ResetPlayerHealth()
     {
-        GameObject playerObj = player;
-
-        if (playerObj == null)
-            playerObj = GameObject.FindGameObjectWithTag("Player");
-
-        if (playerObj == null && SceneTransitionManager.Instance != null)
-            playerObj = SceneTransitionManager.Instance.playerRoot;
+        GameObject playerObj = GetPlayer();
 
         if (playerObj != null)
         {
@@ -83,11 +107,23 @@ public class DeathUI : MonoBehaviour
                 Debug.Log("DeathUI: Player health reset!");
             }
 
-            // Reset fall death
             Level6Scripts.Level6FallDeath fallDeath =
                 playerObj.GetComponent<Level6Scripts.Level6FallDeath>();
             if (fallDeath != null)
                 fallDeath.Reset();
         }
+    }
+
+    private GameObject GetPlayer()
+    {
+        GameObject playerObj = player;
+
+        if (playerObj == null)
+            playerObj = GameObject.FindGameObjectWithTag("Player");
+
+        if (playerObj == null && SceneTransitionManager.Instance != null)
+            playerObj = SceneTransitionManager.Instance.playerRoot;
+
+        return playerObj;
     }
 }
