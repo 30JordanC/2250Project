@@ -14,30 +14,47 @@ namespace Level6Scripts
 
         private void Awake()
         {
-            Instance = this;
+            if (Instance == null)
+                Instance = this;
+            else
+            {
+                Destroy(gameObject);
+            }
+        }
+
+        private void Start()
+        {
+            // Start with background ambient music
+            SoundManager.Instance?.PlayBackgroundMusic();
         }
 
         public void CollectSword()
         {
             hasSword = true;
-            Debug.Log("Sword collected");
+            Debug.Log("Level6Manager: Sword collected! Press F to attack.");
         }
 
         public void BossDefeated()
         {
             bossDead = true;
-            Debug.Log("Boss defeated");
+            Debug.Log("Level6Manager: Boss defeated! Terra pickup is now active.");
 
             if (terraObject != null)
-            {
                 terraObject.SetActive(true);
-            }
+            else
+                Debug.LogWarning("Level6Manager: terraObject not assigned in Inspector.");
         }
 
         public void CompleteLevel()
         {
+            if (levelComplete) return;
             levelComplete = true;
-            Debug.Log("Level 6 Complete");
+
+            SoundManager.Instance?.PlaySFX(SoundManager.SFX.LevelComplete);
+            Debug.Log("Level6Manager: Level 6 Complete!");
+
+            // Uncomment to load next scene:
+            // SceneTransitionManager.Instance?.LoadScene("YourNextScene", "SpawnID");
         }
     }
 }

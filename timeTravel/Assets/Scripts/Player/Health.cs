@@ -1,53 +1,92 @@
 using UnityEngine;
+using UnityEngine.SceneManagement; // ✅ ADDED
 
-public class Health : MonoBehaviour
+namespace Player
 {
-    public float maxHealth = 100f;
-	public float currentHealth;
-    public float passiveHealRate;
-    public float healthRegenDelay;
-    private float lastDamagedTime;
-    public DeathUI deathUI;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public class Health : MonoBehaviour
     {
-        currentHealth = maxHealth;
-    }
+        public float maxHealth = 100f;
+        public float currentHealth;
+        public float passiveHealRate;
+        public float healthRegenDelay;
+        private float _lastDamagedTime;
+        public DeathUI deathUI;
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (Time.time > lastDamagedTime + healthRegenDelay && currentHealth < maxHealth)
+        // ✅ ADDED
+        void OnEnable()
         {
-            Heal(passiveHealRate*Time.deltaTime);
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
-    }
 
-    public void TakeDamage(float amount)
-    {
-        currentHealth -= amount;
-        currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
-
-        if (currentHealth <= 0f)
+        // ✅ ADDED
+        void OnDisable()
         {
-            Die();
+            SceneManager.sceneLoaded -= OnSceneLoaded;
         }
-    }
 
-    public void Heal(float amount)
-    {
-        currentHealth += amount;
-        currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
-    }
-
-    public void Die()
-    {
-        Debug.Log("Player died");
-
-        if (deathUI != null)
+        // ✅ ADDED
+        void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            deathUI.ShowDeathScreen();
+            // Try to find DeathUI in the new scene
+            DeathUI foundUI = FindObjectOfType<DeathUI>();
+
+            if (foundUI != null)
+            {
+                deathUI = foundUI;
+                Debug.Log("DeathUI reattached after scene load");
+            }
+            else
+            {
+                Debug.LogWarning("DeathUI not found in scene!");
+            }
+        }
+
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        void Start()
+        {
+            currentHealth = maxHealth;
+
+            // ✅ ADDED (fallback in case sceneLoaded doesn't trigger first time)
+            if (deathUI == null)
+            {
+                deathUI = FindObjectOfType<DeathUI>();
+            }
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            if (Time.time > _lastDamagedTime + healthRegenDelay && currentHealth < maxHealth)
+            {
+                Heal(passiveHealRate*Time.deltaTime);
+            }
+        }
+
+        public void TakeDamage(float amount)
+        {
+            currentHealth -= amount;
+            currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
+
+            if (currentHealth <= 0f)
+            {
+                Die();
+            }
+        }
+
+        public void Heal(float amount)
+        {
+            currentHealth += amount;
+            currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
+        }
+
+        public void Die()
+        {
+            Debug.Log("Player died");
+
+            if (deathUI != null)
+            {
+                deathUI.ShowDeathScreen();
+            }
         }
     }
 }
