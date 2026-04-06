@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterCustomizationScripts.CharacterSelectionManager
   selectedCharacter: 0
-  nextSceneName: IntroScene
+  nextSceneName: Bootstrap
 --- !u!4 &19942714
 Transform:
   m_ObjectHideFlags: 0
