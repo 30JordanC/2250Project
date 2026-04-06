@@ -1,3 +1,4 @@
+using Level2Scripts;
 using UnityEngine;
 
 namespace Player
