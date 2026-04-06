@@ -8602,7 +8602,7 @@ MonoBehaviour:
   fakeMessageText: {fileID: 1526575399}
   hideDelay: 3
   audioSource: {fileID: 0}
-  fakeStoneAudio: {fileID: 0}
+  fakeStoneAudio: {fileID: 8300000, guid: 987871503d06f4ab5a239f5b250723c7, type: 3}
 --- !u!1001 &1413922234159203497
 PrefabInstance:
   m_ObjectHideFlags: 0
