@@ -12,6 +12,11 @@ namespace Level6Scripts
         public Text timerText;
         public GameObject timerPanel;
 
+        [Header("Audio")]
+        public AudioClip urgentSound;
+        private AudioSource _audioSource;
+        private bool _urgentPlayed = false;
+
         private float _timeRemaining;
         private bool _timerRunning;
         private bool _timerExpired;
@@ -31,6 +36,11 @@ namespace Level6Scripts
             _timeRemaining = timeLimit;
             _timerRunning = false;
             _timerExpired = false;
+            _urgentPlayed = false;
+
+            _audioSource = GetComponent<AudioSource>();
+            if (_audioSource == null)
+                _audioSource = gameObject.AddComponent<AudioSource>();
 
             if (timerPanel != null)
                 timerPanel.SetActive(false);
@@ -43,8 +53,16 @@ namespace Level6Scripts
             _timeRemaining -= Time.deltaTime;
             UpdateTimerUI();
 
+            // Turn red at 30 seconds
             if (_timeRemaining <= 30f && timerText != null)
                 timerText.color = Color.red;
+
+            // Play urgent sound once at 30 seconds
+            if (_timeRemaining <= 30f && !_urgentPlayed)
+            {
+                _urgentPlayed = true;
+                PlayUrgentSound();
+            }
 
             if (_timeRemaining <= 0f)
                 TimerExpired();
@@ -54,6 +72,7 @@ namespace Level6Scripts
         {
             _timerRunning = true;
             _timerExpired = false;
+            _urgentPlayed = false;
             _timeRemaining = timeLimit;
 
             if (timerPanel != null)
@@ -72,7 +91,21 @@ namespace Level6Scripts
             if (timerPanel != null)
                 timerPanel.SetActive(false);
 
+            if (_audioSource != null)
+                _audioSource.Stop();
+
             Debug.Log("Level6Timer: Timer stopped!");
+        }
+
+        private void PlayUrgentSound()
+        {
+            if (urgentSound != null && _audioSource != null)
+            {
+                _audioSource.clip = urgentSound;
+                _audioSource.loop = true;
+                _audioSource.Play();
+                Debug.Log("Level6Timer: Urgent sound playing!");
+            }
         }
 
         private void UpdateTimerUI()
@@ -93,6 +126,9 @@ namespace Level6Scripts
             if (timerPanel != null)
                 timerPanel.SetActive(false);
 
+            if (_audioSource != null)
+                _audioSource.Stop();
+
             Debug.Log("Level6Timer: Time expired! Killing player...");
 
             KillPlayer();
@@ -100,51 +136,24 @@ namespace Level6Scripts
 
         private void KillPlayer()
         {
-            // Search every possible way
             Player.Health ph = null;
 
-            // Method 1 — by tag
-            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-            if (playerObj != null)
-            {
-                ph = playerObj.GetComponent<Player.Health>()
-                     ?? playerObj.GetComponentInChildren<Player.Health>()
-                     ?? playerObj.GetComponentInParent<Player.Health>();
-            }
+            Player.Health[] allHealth = FindObjectsByType<Player.Health>(
+                FindObjectsSortMode.None);
 
-            // Method 2 — SceneTransitionManager
-            if (ph == null && SceneTransitionManager.Instance != null
-                && SceneTransitionManager.Instance.playerRoot != null)
+            if (allHealth.Length > 0)
             {
-                GameObject root = SceneTransitionManager.Instance.playerRoot;
-                ph = root.GetComponent<Player.Health>()
-                     ?? root.GetComponentInChildren<Player.Health>();
-            }
-
-            // Method 3 — find by name
-            if (ph == null)
-            {
-                GameObject byName = GameObject.Find("PlayerRoot");
-                if (byName != null)
-                    ph = byName.GetComponentInChildren<Player.Health>();
-            }
-
-            // Method 4 — find all Health in scene
-            if (ph == null)
-            {
-                Player.Health[] all = FindObjectsByType<Player.Health>(
-                    FindObjectsSortMode.None);
-                if (all.Length > 0)
-                    ph = all[0];
+                ph = allHealth[0];
+                Debug.Log($"Level6Timer: Found Health on {ph.gameObject.name}!");
             }
 
             if (ph != null)
             {
-                Debug.Log("Level6Timer: Found Health — calling Die()!");
                 ph.Die();
+                Debug.Log("Level6Timer: Die() called!");
             }
             else
-                Debug.LogWarning("Level6Timer: Could not find Health anywhere!");
+                Debug.LogWarning("Level6Timer: No Health found anywhere!");
         }
     }
 }

@@ -50,7 +50,6 @@ namespace Level6Scripts
                 victoryAudioSource = gameObject.AddComponent<AudioSource>();
 
             SetupPlayer();
-
             Invoke(nameof(StartChallengeTimer), 2f);
         }
 
@@ -95,7 +94,7 @@ namespace Level6Scripts
         public void CollectSword()
         {
             hasSword = true;
-            Debug.Log("Level6Manager: Axe collected! Press F to attack ghost!");
+            Debug.Log("Level6Manager: Axe collected!");
         }
 
         public void TerraCollected()
@@ -105,20 +104,13 @@ namespace Level6Scripts
 
             Debug.Log("Level6Manager: Terra collected! Level Complete!");
 
-            // Stop timer
             if (Level6Timer.Instance != null)
                 Level6Timer.Instance.StopTimer();
 
-            // Play victory music
             PlayVictoryMusic();
-
-            // Weaken ghost
             WeakenGhost();
-
-            // Give player reward
             GivePlayerReward();
 
-            // Show win screen after delay
             Invoke(nameof(ShowLevelCompleteUI), 1.5f);
         }
 
@@ -187,7 +179,6 @@ namespace Level6Scripts
                 else
                     Debug.LogWarning("Level6Manager: PlayerMovement not found.");
 
-                // Remove fall death after winning
                 Level6FallDeath fallDeath = playerObj.GetComponent<Level6FallDeath>();
                 if (fallDeath != null)
                     Destroy(fallDeath);
@@ -205,12 +196,12 @@ namespace Level6Scripts
                 if (levelCompleteText != null)
                 {
                     levelCompleteText.text =
+                        "GAME WON!\n\n" +
                         "THE REALM IS FREED!\n\n" +
-                        "You collected the Terra Artifact!\n" +
-                        "The ghost has lost its powers...\n" +
-                        "Balance has been restored!\n\n" +
-                        "Well done, brave traveller!\n" +
-                        "YOU WIN!";
+                        "The Terra Artifact has been collected.\n" +
+                        "The demon curse is broken!\n" +
+                        "The ghost has lost its powers...\n\n" +
+                        "Well done, brave traveller!";
                 }
                 else
                     Debug.LogWarning("Level6Manager: levelCompleteText not assigned!");
@@ -218,14 +209,15 @@ namespace Level6Scripts
             else
                 Debug.LogWarning("Level6Manager: levelCompletePanel not assigned!");
 
-            // Pause game on win
             Time.timeScale = 0f;
-
-            // Show cursor
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
 
+            if (Level6Timer.Instance != null)
+                Level6Timer.Instance.StopTimer();
+
             CompleteLevel();
+            Debug.Log("Level6Manager: GAME WON!");
         }
 
         public void CompleteLevel()

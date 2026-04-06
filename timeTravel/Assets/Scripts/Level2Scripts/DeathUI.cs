@@ -7,13 +7,18 @@ public class DeathUI : MonoBehaviour
     public GameObject player;
     public GameObject openIntro;
 
+    private void Start()
+    {
+        if (deathScreen != null)
+            deathScreen.SetActive(false);
+    }
+
     public void ShowDeathScreen()
     {
         if (deathScreen != null)
             deathScreen.SetActive(true);
 
         Time.timeScale = 0f;
-
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
@@ -30,14 +35,12 @@ public class DeathUI : MonoBehaviour
         if (openIntro != null)
             openIntro.SetActive(false);
 
-        // Reset player health
         ResetPlayerHealth();
 
-        // Respawn player at spawn point
         if (RespawnManager.instance != null && player != null)
             RespawnManager.instance.Respawn(player);
 
-        // Reset Level6 timer
+        // Restart timer
         if (Level6Scripts.Level6Timer.Instance != null)
             Level6Scripts.Level6Timer.Instance.StartTimer();
 
@@ -50,7 +53,6 @@ public class DeathUI : MonoBehaviour
     public void RestartLevel()
     {
         Time.timeScale = 1f;
-
         ResetPlayerHealth();
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -80,6 +82,12 @@ public class DeathUI : MonoBehaviour
                 ph.ResetHealth();
                 Debug.Log("DeathUI: Player health reset!");
             }
+
+            // Reset fall death
+            Level6Scripts.Level6FallDeath fallDeath =
+                playerObj.GetComponent<Level6Scripts.Level6FallDeath>();
+            if (fallDeath != null)
+                fallDeath.Reset();
         }
     }
 }
