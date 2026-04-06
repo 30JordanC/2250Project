@@ -921,6 +921,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: affee341f81f7f14db1ad8c2d82f69fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObtainArtifact
+  interactText: Press E to pick up T. Rex Egg
 --- !u!135 &67785869
 SphereCollider:
   m_ObjectHideFlags: 0
