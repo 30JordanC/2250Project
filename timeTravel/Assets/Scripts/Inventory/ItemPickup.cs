@@ -29,11 +29,8 @@ public class ItemPickup : MonoBehaviour
         if (item != null)
         {
             item.Pickup(inventory);
-<<<<<<< Updated upstream
 
             // Tell the hotbar to refresh so the item appears in the UI right away
-=======
->>>>>>> Stashed changes
             if (HotbarUI.Instance != null)
                 HotbarUI.Instance.ForceRefresh();
         }
