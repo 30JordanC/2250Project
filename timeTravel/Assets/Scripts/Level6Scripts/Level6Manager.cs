@@ -62,12 +62,17 @@ namespace Level6Scripts
 
             if (playerObj != null)
             {
+                // Add fall death
                 Level6FallDeath fallDeath = playerObj.GetComponent<Level6FallDeath>();
                 if (fallDeath == null)
                     fallDeath = playerObj.AddComponent<Level6FallDeath>();
-
                 fallDeath.deathY = 8f;
                 fallDeath.Reset();
+
+                // Add death trigger
+                Level6DeathTrigger deathTrigger = playerObj.GetComponent<Level6DeathTrigger>();
+                if (deathTrigger == null)
+                    playerObj.AddComponent<Level6DeathTrigger>();
 
                 Debug.Log("Level6Manager: Player setup complete!");
             }
@@ -182,6 +187,10 @@ namespace Level6Scripts
                 Level6FallDeath fallDeath = playerObj.GetComponent<Level6FallDeath>();
                 if (fallDeath != null)
                     Destroy(fallDeath);
+
+                Level6DeathTrigger deathTrigger = playerObj.GetComponent<Level6DeathTrigger>();
+                if (deathTrigger != null)
+                    Destroy(deathTrigger);
             }
             else
                 Debug.LogWarning("Level6Manager: Player not found for reward.");
