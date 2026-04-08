@@ -7,30 +7,22 @@ public class ItemPickup : MonoBehaviour
     private void Awake()
     {
         item = GetComponent<Item>();
+
         if (item == null)
+        {
             Debug.LogWarning(gameObject.name + " is missing an Item component.");
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("Player")) return;
 
-        Inventory inventory = other.GetComponent<Inventory>() 
-                           ?? other.GetComponentInParent<Inventory>()
-                           ?? GameObject.FindGameObjectWithTag("Player")
-                                        .GetComponent<Inventory>();
+        Inventory inventory = other.GetComponent<Inventory>();
 
-        if (inventory == null)
-        {
-            Debug.LogError("Could not find Inventory on player!");
-            return;
-        }
-
-        if (item != null)
+        if (inventory != null && item != null)
         {
             item.Pickup(inventory);
-            if (HotbarUI.Instance != null)
-                HotbarUI.Instance.ForceRefresh();
         }
     }
 }
