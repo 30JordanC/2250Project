@@ -15,13 +15,25 @@ public class ItemPickup : MonoBehaviour
     {
         if (!other.CompareTag("Player")) return;
 
-        Inventory inventory = other.GetComponent<Inventory>();
+        Inventory inventory = other.GetComponent<Inventory>() 
+                           ?? other.GetComponentInParent<Inventory>()
+                           ?? GameObject.FindGameObjectWithTag("Player")
+                                        .GetComponent<Inventory>();
 
-        if (inventory != null && item != null)
+        if (inventory == null)
+        {
+            Debug.LogError("Could not find Inventory on player!");
+            return;
+        }
+
+        if (item != null)
         {
             item.Pickup(inventory);
+<<<<<<< Updated upstream
 
             // Tell the hotbar to refresh so the item appears in the UI right away
+=======
+>>>>>>> Stashed changes
             if (HotbarUI.Instance != null)
                 HotbarUI.Instance.ForceRefresh();
         }

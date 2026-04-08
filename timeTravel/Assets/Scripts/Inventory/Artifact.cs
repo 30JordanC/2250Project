@@ -2,13 +2,10 @@ using UnityEngine;
 
 public class Artifact : Item
 {
-    [SerializeField] private bool isCollected = false;
-
-    public bool IsCollected => isCollected;
-
     public override void Pickup(Inventory inventory)
     {
         if (inventory == null) return;
+<<<<<<< Updated upstream
 
         bool added = inventory.AddItem(this);
 
@@ -23,5 +20,8 @@ public class Artifact : Item
 
             gameObject.SetActive(false);
         }
+=======
+        inventory.AddItem(this);
+>>>>>>> Stashed changes
     }
 }
