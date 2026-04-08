@@ -6,11 +6,21 @@ public class Stealth : MonoBehaviour
     public bool isHidden;
 
     private int hidingSpotCount = 0;
+    
+    public GameObject hiddenIcon;
+
 
     void Update()
     {
         isHidden = hidingSpotCount > 0 && isCrouching;
-        Debug.Log("Hidden: " + isHidden);
+        if (isHidden)
+        {
+            hiddenIcon.SetActive(true);
+        }
+        else
+        {
+            hiddenIcon.SetActive(false);
+        }
     }
 
     public void SetCrouching(bool crouching)
