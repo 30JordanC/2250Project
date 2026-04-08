@@ -2,28 +2,65 @@ using UnityEngine;
 
 namespace Level6Scripts
 {
-    public class TerraPickupLevel6 : MonoBehaviour
+    public class TerraPickupLevel6 : MonoBehaviour, IInteractable
     {
-        private void OnTriggerEnter(Collider other)
+        [Header("Settings")]
+        public string interactText = "Press E to Collect Terra Artifact!";
+
+        [Header("Require Axe")]
+        public bool requireAxe = true;
+
+        [Header("Effects")]
+        public AudioClip collectSound;
+        public GameObject collectEffect;
+
+        private bool _collected = false;
+
+        public void Interact()
         {
-            if (!other.CompareTag("Player")) return;
+            if (_collected) return;
 
-            if (Level6Manager.Instance == null)
+            if (requireAxe && Level6Manager.Instance != null && !Level6Manager.Instance.hasSword)
             {
-                Debug.LogWarning("TerraPickupLevel6: Level6Manager not found.");
+                Debug.Log("TerraPickup: You need the Legendary Axe first!");
                 return;
             }
 
-            if (!Level6Manager.Instance.bossDead)
-            {
-                Debug.Log("TerraPickupLevel6: Boss is not dead yet.");
-                return;
-            }
+            Collect();
+        }
 
-            SoundManager.Instance?.PlaySFX(SoundManager.SFX.PickupTerra);
-            Level6Manager.Instance.CompleteLevel();
+        public bool CanInteract()
+        {
+            if (requireAxe && Level6Manager.Instance != null && !Level6Manager.Instance.hasSword)
+                return false;
+            return !_collected;
+        }
+
+        public string GetInteractText()
+        {
+            if (requireAxe && Level6Manager.Instance != null && !Level6Manager.Instance.hasSword)
+                return "Find the Legendary Axe first!";
+            return interactText;
+        }
+
+        private void Collect()
+        {
+            _collected = true;
+
+            if (collectSound != null)
+                AudioSource.PlayClipAtPoint(collectSound, transform.position);
+
+            if (collectEffect != null)
+                Instantiate(collectEffect, transform.position, Quaternion.identity);
+
+            SoundManager.Instance?.PlaySFX(SoundManager.SFX.PickupSword);
+
+            Debug.Log("TerraPickup: Terra Artifact collected!");
+
+            if (Level6Manager.Instance != null)
+                Level6Manager.Instance.TerraCollected();
+
             gameObject.SetActive(false);
-            Debug.Log("Level 6 Completed!");
         }
     }
 }
