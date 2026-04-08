@@ -39,7 +39,11 @@ public class HotbarSlotUI : MonoBehaviour
             else
             {
                 itemIcon.sprite  = null;
+<<<<<<< Updated upstream
                 itemIcon.color   = new Color(1f, 1f, 1f, 0.3f);
+=======
+                itemIcon.color   = Color.white;
+>>>>>>> Stashed changes
                 itemIcon.enabled = true;
             }
         }
