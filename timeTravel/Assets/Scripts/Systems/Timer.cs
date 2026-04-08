@@ -1,19 +1,14 @@
 using UnityEngine;
-using TMPro;
 
 public class Timer : MonoBehaviour
 {
     public float timeRemaining;
-    public bool isRunning = false;
+    public bool isRunning;
 
-    public TextMeshProUGUI timerText;
-    public GameObject timeUpScreen; // 👈 DRAG PANEL HERE
-
-    public float startTime = 300f;
-
-    void Start()
+    public void StartTimer(float duration)
     {
-        StartTimer(startTime);
+        timeRemaining = duration;
+        isRunning = true;
     }
 
     void Update()
@@ -24,54 +19,18 @@ public class Timer : MonoBehaviour
 
         if (timeRemaining <= 0)
         {
-            timeRemaining = 0;
             isRunning = false;
             TimeExpired();
         }
-
-        UpdateTimerUI();
     }
 
-    public void StartTimer(float duration)
+    public void TimeExpired()
     {
-        timeRemaining = duration;
-        isRunning = true;
-        UpdateTimerUI();
-    }
+        Debug.Log("Timer expired!");
 
-    void UpdateTimerUI()
-    {
-        if (timerText == null) return;
-
-        float minutes = Mathf.FloorToInt(timeRemaining / 60);
-        float seconds = Mathf.FloorToInt(timeRemaining % 60);
-
-        timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
-
-        if (timeRemaining <= 30f)
+        if (GameControl.Instance != null)
         {
-            timerText.color = Color.red;
+            GameControl.Instance.CheckLoseCondition();
         }
-    }
-
-    void TimeExpired()
-    {
-        Debug.Log("Out of time!");
-
-        // SHOW YOUR DEATH SCREEN DIRECTLY
-        if (timeUpScreen != null)
-        {
-            timeUpScreen.SetActive(true);
-        }
-
-        // PAUSE GAME
-        Time.timeScale = 0f;
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-    }
-
-    public void StopTimer()
-    {
-        isRunning = false;
     }
 }

@@ -16,11 +16,6 @@ public class Artifact : Item
         {
             isCollected = true;
             Debug.Log(ItemName + " artifact collected.");
-
-            // Tell the hotbar UI to refresh so icon appears immediately this is good
-            if (HotbarUI.Instance != null)
-                HotbarUI.Instance.ForceRefresh();
-
             gameObject.SetActive(false);
         }
     }

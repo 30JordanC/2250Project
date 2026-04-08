@@ -1,6 +1,4 @@
-using Level2Scripts;
 using UnityEngine;
-using UnityEngine.SceneManagement; // ✅ ADDED
 
 namespace Player
 {
@@ -13,45 +11,10 @@ namespace Player
         private float _lastDamagedTime;
         public DeathUI deathUI;
 
-        // ✅ ADDED
-        void OnEnable()
-        {
-            SceneManager.sceneLoaded += OnSceneLoaded;
-        }
-
-        // ✅ ADDED
-        void OnDisable()
-        {
-            SceneManager.sceneLoaded -= OnSceneLoaded;
-        }
-
-        // ✅ ADDED
-        void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-        {
-            // Try to find DeathUI in the new scene
-            DeathUI foundUI = FindObjectOfType<DeathUI>();
-
-            if (foundUI != null)
-            {
-                deathUI = foundUI;
-                Debug.Log("DeathUI reattached after scene load");
-            }
-            else
-            {
-                Debug.LogWarning("DeathUI not found in scene!");
-            }
-        }
-
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
             currentHealth = maxHealth;
-
-            // ✅ ADDED (fallback in case sceneLoaded doesn't trigger first time)
-            if (deathUI == null)
-            {
-                deathUI = FindObjectOfType<DeathUI>();
-            }
         }
 
         // Update is called once per frame

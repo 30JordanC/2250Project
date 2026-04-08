@@ -15,7 +15,7 @@ namespace Level6Scripts
         [Header("Boss Settings")]
         public bool isBoss;
 
-        private static readonly int HurtHash = Animator.StringToHash("Hit");
+        private static readonly int HurtHash = Animator.StringToHash("Hurt");
         private static readonly int IsDeadHash = Animator.StringToHash("isDead");
 
         private bool _isDead;
@@ -26,9 +26,6 @@ namespace Level6Scripts
 
             if (animator == null)
                 animator = GetComponent<Animator>();
-
-            if (animator == null)
-                animator = GetComponentInChildren<Animator>();
         }
 
         public void TakeDamage(float amount)
@@ -41,9 +38,8 @@ namespace Level6Scripts
             if (animator != null)
                 animator.SetTrigger(HurtHash);
 
+            // Play hurt sound
             SoundManager.Instance?.PlaySFXAt(SoundManager.SFX.GolemHurt, transform.position);
-
-            Debug.Log($"EnemyHealth: {gameObject.name} took {amount} damage! Health: {currentHealth}");
 
             if (currentHealth <= 0f)
                 Die();
@@ -53,7 +49,6 @@ namespace Level6Scripts
         {
             _isDead = true;
 
-            // Disable EnemyAI if present
             EnemyAI enemyAI = GetComponent<EnemyAI>();
             if (enemyAI != null)
                 enemyAI.enabled = false;
@@ -61,16 +56,14 @@ namespace Level6Scripts
             if (animator != null)
                 animator.SetBool(IsDeadHash, true);
 
-            // Play death sounds
+            // Play death sound and crossfade to victory music
             SoundManager.Instance?.PlaySFXAt(SoundManager.SFX.GolemDeath, transform.position);
-            SoundManager.Instance?.CrossfadeMusic(null);
+            SoundManager.Instance?.CrossfadeMusic(null); // stops boss music
             SoundManager.Instance?.PlayVictoryMusic();
 
-            // Trigger boss defeated if this is the boss
             if (isBoss && Level6Manager.Instance != null)
                 Level6Manager.Instance.BossDefeated();
 
-            // Destroy after delay if enabled
             if (destroyOnDeath)
                 Destroy(gameObject, destroyDelay);
         }

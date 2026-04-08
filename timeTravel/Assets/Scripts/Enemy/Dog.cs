@@ -35,23 +35,21 @@ public class Dog : Enemy
         }
     }
 
-    
     public override void Move()
     {
         if (target == null) return;
 
-        Vector3 direction = target.position - transform.position;
+        // Direction to player
+        Vector3 direction = (target.position - transform.position).normalized;
 
-        direction = direction.normalized;
-
-        // Rotate
+        // Rotate dog to face player
         if (direction != Vector3.zero)
         {
             Quaternion lookRotation = Quaternion.LookRotation(direction);
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, 5f * Time.deltaTime);
         }
 
-        // Move
+        // Move forward
         transform.position += direction * (speed + 1.5f) * Time.deltaTime;
     }
 }

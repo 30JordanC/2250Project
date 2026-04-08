@@ -31,14 +31,11 @@ public class PlayerMovement : MonoBehaviour
     public Animator animator1;
     public Animator animator2;
     public Animator animator3;
-
-    private Stealth stealth;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        stealth = GetComponent<Stealth>();
         rb.freezeRotation = true;
 
         stamina = GetComponent<Stamina>();
@@ -86,11 +83,6 @@ public class PlayerMovement : MonoBehaviour
         else 
         {
             currentSpeed = walkSpeed;
-        }
-        
-        if (stealth != null)
-        {
-            stealth.SetCrouching(isCrouching);
         }
         
         UpdateAnimator();

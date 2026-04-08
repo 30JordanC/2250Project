@@ -6,7 +6,6 @@ TagManager:
   tags:
   - Npc
   - Enemy
-  - DeathUI
   layers:
   - Default
   - TransparentFX
@@ -18,7 +17,7 @@ TagManager:
   - Interactable
   - Lava
   - Enemy
-  - Pebble
+  - 
   - 
   - 
   - 
