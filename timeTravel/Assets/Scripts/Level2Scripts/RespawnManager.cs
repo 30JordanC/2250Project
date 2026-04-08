@@ -6,6 +6,8 @@ public class RespawnManager : MonoBehaviour
 
     public Transform currentCheckpoint;
 
+    public bool resetLevel = false;
+
     private void Awake()
     {
         instance = this;
@@ -19,6 +21,11 @@ public class RespawnManager : MonoBehaviour
 
     public void Respawn(GameObject player)
     {
+        if (resetLevel)
+        {
+            SceneTransitionManager.Instance.LoadScene("Level 1", "Level1Spawn");
+            return;
+        }
         if (currentCheckpoint != null)
         {
             TeleportPlayer(player, currentCheckpoint.position); 

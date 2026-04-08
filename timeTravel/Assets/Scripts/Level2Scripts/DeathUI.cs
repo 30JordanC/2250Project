@@ -39,7 +39,7 @@ namespace Level2Scripts
             openIntro.SetActive(false);
 
             RespawnManager.instance.Respawn(player);
-
+            
             // Lock cursor again
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
@@ -54,6 +54,16 @@ namespace Level2Scripts
             Cursor.visible = false;
 
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+
+        public void CloseScreens()
+        {
+            Time.timeScale = 1f;
+            deathScreen.SetActive(false);
+            openIntro.SetActive(false);
+            
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
     }
 }
