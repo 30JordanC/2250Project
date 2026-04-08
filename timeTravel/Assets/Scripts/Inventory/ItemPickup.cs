@@ -7,8 +7,11 @@ public class ItemPickup : MonoBehaviour
     private void Awake()
     {
         item = GetComponent<Item>();
+
         if (item == null)
+        {
             Debug.LogWarning(gameObject.name + " is missing an Item component.");
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -20,10 +23,6 @@ public class ItemPickup : MonoBehaviour
         if (inventory != null && item != null)
         {
             item.Pickup(inventory);
-
-            // Tell the hotbar to refresh so the item appears in the UI right away
-            if (HotbarUI.Instance != null)
-                HotbarUI.Instance.ForceRefresh();
         }
     }
 }

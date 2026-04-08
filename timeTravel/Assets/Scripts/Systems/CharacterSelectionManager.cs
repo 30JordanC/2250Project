@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class CharacterSelectionManager : MonoBehaviour
 {
+    public static bool runIntroCutscene = false; // signal to the intro scene
     public static CharacterSelectionManager Instance;
 
     public enum CharacterType
@@ -35,6 +36,7 @@ public class CharacterSelectionManager : MonoBehaviour
     {
         selectedCharacter = CharacterType.Male;
         Debug.Log("Male selected");
+        runIntroCutscene = true; // <-- signal the intro cutscene to run
         LoadNextScene();
     }
 
@@ -42,6 +44,7 @@ public class CharacterSelectionManager : MonoBehaviour
     {
         selectedCharacter = CharacterType.Middle;
         Debug.Log("Middle character selected");
+        runIntroCutscene = true; // <-- signal the intro cutscene to run
         LoadNextScene();
     }
 
@@ -49,6 +52,7 @@ public class CharacterSelectionManager : MonoBehaviour
     {
         selectedCharacter = CharacterType.Female;
         Debug.Log("Female selected");
+        runIntroCutscene = true; // <-- signal the intro cutscene to run
         LoadNextScene();
     }
 

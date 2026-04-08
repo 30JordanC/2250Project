@@ -7,29 +7,18 @@ public class PipeWallInteract : MonoBehaviour, IInteractable
     public PipePuzzle pipePuzzle;
     private bool menuIsOpen;
     private bool solved = false;
-    private PlayerMovement playerMovement;
-    private FirstPersonCamera firstPersonCam;
-    private ThirdPersonCamera thirdPersonCam;
-    private CameraModeSwitcher cameraSwitcher;
-    private CinemachineInputProvider freeLookInputProvider;
+    public PlayerMovement playerMovement;
+    public FirstPersonCamera firstPersonCam;
+    public ThirdPersonCamera thirdPersonCam;
+    public CameraModeSwitcher cameraSwitcher;
+    public CinemachineInputProvider freeLookInputProvider;
     public GameObject door;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         puzzleMenu.SetActive(false);
-    menuIsOpen = false;
-
-    // Find player components at runtime
-    GameObject player = GameObject.FindWithTag("Player");
-    if (player != null)
-    {
-        playerMovement = player.GetComponentInChildren<PlayerMovement>();
-        firstPersonCam = player.GetComponentInChildren<FirstPersonCamera>();
-        thirdPersonCam = player.GetComponentInChildren<ThirdPersonCamera>();
-        cameraSwitcher = player.GetComponentInChildren<CameraModeSwitcher>();
-        freeLookInputProvider = player.GetComponentInChildren<CinemachineInputProvider>();
-    }
+        menuIsOpen = false;
     }
 
     // Update is called once per frame
@@ -42,26 +31,22 @@ public class PipeWallInteract : MonoBehaviour, IInteractable
     }
 
     public void Interact()
-{
-    if (menuIsOpen) return;
+    {
+        if (menuIsOpen) return;
 
-    puzzleMenu.SetActive(true);
-    menuIsOpen = true;
+        puzzleMenu.SetActive(true);
+        menuIsOpen = true;
 
-    Cursor.lockState = CursorLockMode.None;
-    Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
 
-    Debug.Log("Cursor unlocked: " + Cursor.lockState);
-    Debug.Log("PlayerMovement null: " + (playerMovement == null));
-    Debug.Log("FreeLook null: " + (freeLookInputProvider == null));
-
-    // only disable if not null
-    if (playerMovement != null) { playerMovement.StopMovement(); playerMovement.enabled = false; }
-    if (firstPersonCam != null) firstPersonCam.canLook = false;
-    if (thirdPersonCam != null) thirdPersonCam.canLook = false;
-    if (cameraSwitcher != null) cameraSwitcher.canLook = false;
-    if (freeLookInputProvider != null) freeLookInputProvider.enabled = false;
-}
+        playerMovement.StopMovement();
+        playerMovement.enabled = false;
+        firstPersonCam.canLook = false;
+        thirdPersonCam.canLook = false;
+        cameraSwitcher.canLook = false;
+        freeLookInputProvider.enabled = false;
+    }
 
     public bool CanInteract()
     {
@@ -74,19 +59,19 @@ public class PipeWallInteract : MonoBehaviour, IInteractable
     }
 
     public void CloseMenu()
-{
-    puzzleMenu.SetActive(false);
-    menuIsOpen = false;
+    {
+        puzzleMenu.SetActive(false);
+        menuIsOpen = false;
 
-    Cursor.lockState = CursorLockMode.Locked;
-    Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
 
-    if (playerMovement != null) playerMovement.enabled = true;
-    if (firstPersonCam != null) firstPersonCam.canLook = true;
-    if (thirdPersonCam != null) thirdPersonCam.canLook = true;
-    if (cameraSwitcher != null) cameraSwitcher.canLook = true;
-    if (freeLookInputProvider != null) freeLookInputProvider.enabled = true;
-}
+        playerMovement.enabled = true;
+        firstPersonCam.canLook = true;
+        thirdPersonCam.canLook = true;
+        cameraSwitcher.canLook = true;
+        freeLookInputProvider.enabled = true;
+    }
 
     public void OnPuzzleSolved()
     {
