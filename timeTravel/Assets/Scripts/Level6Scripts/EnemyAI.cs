@@ -9,13 +9,13 @@ namespace Level6Scripts
         public Transform player;
 
         [Header("Movement")]
-        public float moveSpeed     = 2.5f;
-        public float chaseRange    = 30f;
-        public float attackRange   = 2f;
+        public float moveSpeed = 2.5f;
+        public float chaseRange = 30f;
+        public float attackRange = 2f;
         public float rotationSpeed = 8f;
 
         [Header("Attack")]
-        public float attackDamage   = 15f;
+        public float attackDamage = 15f;
         public float attackCooldown = 1.2f;
 
         [Header("Optional Patrol")]
@@ -26,16 +26,16 @@ namespace Level6Scripts
         [Header("Optional — drag Animator component here")]
         public Animator animator;
 
-        private static readonly int AttackHash   = Animator.StringToHash("Attack");
-        private static readonly int IsMovingHash = Animator.StringToHash("isMoving");
-        private static readonly int IsDeadHash   = Animator.StringToHash("isDead");
+        // Correct parameter names from GolemAnimator
+        private static readonly int WalkHash   = Animator.StringToHash("Walk");
+        private static readonly int DamageHash = Animator.StringToHash("Damage");
+        private static readonly int IsDeadHash = Animator.StringToHash("isDead");
 
-        private int         _currentPatrolIndex;
-        private float       _lastAttackTime = -999f;
-        private float       _patrolWaitTimer;
+        private int _currentPatrolIndex;
+        private float _lastAttackTime = -999f;
+        private float _patrolWaitTimer;
         private EnemyHealth _enemyHealth;
-
-        // ─────────────────────────────────────────────────────────────
+        private Rigidbody _rb;
 
         private void Start()
         {
@@ -43,6 +43,14 @@ namespace Level6Scripts
                 animator = GetComponentInChildren<Animator>();
 
             _enemyHealth = GetComponent<EnemyHealth>();
+            _rb = GetComponent<Rigidbody>();
+
+            // Lock rotation so enemy doesn't tip over
+            if (_rb != null)
+            {
+                _rb.freezeRotation = true;
+                _rb.constraints = RigidbodyConstraints.FreezeRotation;
+            }
 
             InvokeRepeating(nameof(FindPlayer), 0f, 0.5f);
         }
@@ -65,7 +73,7 @@ namespace Level6Scripts
                 return;
             }
 
-            // 2. Grab directly from SceneTransitionManager (most reliable for your setup)
+            // 2. Grab directly from SceneTransitionManager
             if (SceneTransitionManager.Instance != null &&
                 SceneTransitionManager.Instance.playerRoot != null)
             {
@@ -76,7 +84,7 @@ namespace Level6Scripts
             }
 
             // 3. Fallback: search by common player object names
-            foreach (string n in new[] { "Player", "PlayerObject", "NewPlayerObject", "PlayerCharacter" })
+            foreach (string n in new[] { "Player", "PlayerObject", "PlayerRoot", "PlayerCharacter" })
             {
                 GameObject g = GameObject.Find(n);
                 if (g != null)
@@ -87,11 +95,7 @@ namespace Level6Scripts
                     return;
                 }
             }
-
-            Debug.Log("EnemyAI: Searching for player...");
         }
-
-        // ─────────────────────────────────────────────────────────────
 
         private void Update()
         {
@@ -107,26 +111,47 @@ namespace Level6Scripts
             else if (patrol && patrolPoints != null && patrolPoints.Length > 0)
                 Patrol();
             else
-                SetMoveAnimation(false);
+                SetWalkAnimation(0f);
+        }
+
+        private void FixedUpdate()
+        {
+            if (_rb != null)
+            {
+                // Keep enemy upright always
+                _rb.rotation = Quaternion.Euler(0f, _rb.rotation.eulerAngles.y, 0f);
+            }
         }
 
         private void ChasePlayer()
         {
+            if (player == null) return;
+
             Vector3 direction = player.position - transform.position;
             direction.y = 0f;
 
-            if (direction.sqrMagnitude > 0.01f)
+            if (direction.sqrMagnitude < 0.01f) return;
+
+            // Rotate toward player
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                targetRotation,
+                rotationSpeed * Time.deltaTime
+            );
+
+            // Move using Rigidbody if available, otherwise transform
+            if (_rb != null)
             {
-                Quaternion targetRotation = Quaternion.LookRotation(direction);
-                transform.rotation = Quaternion.Slerp(
-                    transform.rotation,
-                    targetRotation,
-                    rotationSpeed * Time.deltaTime
-                );
+                Vector3 velocity = transform.forward * moveSpeed;
+                _rb.linearVelocity = new Vector3(velocity.x, _rb.linearVelocity.y, velocity.z);
+            }
+            else
+            {
+                transform.position += transform.forward * (moveSpeed * Time.deltaTime);
             }
 
-            transform.position += transform.forward * (moveSpeed * Time.deltaTime);
-            SetMoveAnimation(true);
+            SetWalkAnimation(1f);
         }
 
         private void Patrol()
@@ -144,14 +169,25 @@ namespace Level6Scripts
                     rotationSpeed * Time.deltaTime
                 );
 
-                transform.position += transform.forward * (moveSpeed * Time.deltaTime);
-                SetMoveAnimation(true);
+                if (_rb != null)
+                {
+                    Vector3 velocity = transform.forward * moveSpeed;
+                    _rb.linearVelocity = new Vector3(velocity.x, _rb.linearVelocity.y, velocity.z);
+                }
+                else
+                {
+                    transform.position += transform.forward * (moveSpeed * Time.deltaTime);
+                }
+
+                SetWalkAnimation(1f);
             }
             else
             {
-                SetMoveAnimation(false);
-                _patrolWaitTimer += Time.deltaTime;
+                SetWalkAnimation(0f);
+                if (_rb != null)
+                    _rb.linearVelocity = new Vector3(0f, _rb.linearVelocity.y, 0f);
 
+                _patrolWaitTimer += Time.deltaTime;
                 if (_patrolWaitTimer >= patrolWaitTime)
                 {
                     _patrolWaitTimer = 0f;
@@ -162,7 +198,11 @@ namespace Level6Scripts
 
         private void AttackPlayer()
         {
-            SetMoveAnimation(false);
+            SetWalkAnimation(0f);
+
+            // Stop moving when attacking
+            if (_rb != null)
+                _rb.linearVelocity = new Vector3(0f, _rb.linearVelocity.y, 0f);
 
             Vector3 direction = player.position - transform.position;
             direction.y = 0f;
@@ -182,31 +222,35 @@ namespace Level6Scripts
                 _lastAttackTime = Time.time;
 
                 if (animator != null)
-                    animator.SetTrigger(AttackHash);
+                    animator.SetTrigger(DamageHash);
 
                 SoundManager.Instance?.PlaySFXAt(SoundManager.SFX.GolemAttack, transform.position);
 
-                // Deal damage to player
                 Health ph = player.GetComponentInChildren<Health>()
-                                     ?? player.GetComponent<Health>();
+                             ?? player.GetComponent<Health>();
                 if (ph != null)
                     ph.TakeDamage(attackDamage);
                 else
-                    Debug.Log("EnemyAI: No PlayerHealthLevel6 on player — add it to your Player GameObject.");
+                    Debug.Log("EnemyAI: No Health found on player.");
             }
         }
 
-        private void SetMoveAnimation(bool moving)
+        private void SetWalkAnimation(float value)
         {
             if (animator != null)
-                animator.SetBool(IsMovingHash, moving);
+                animator.SetFloat(WalkHash, value);
         }
 
         public void OnDeath()
         {
             CancelInvoke(nameof(FindPlayer));
+
+            if (_rb != null)
+                _rb.linearVelocity = Vector3.zero;
+
             if (animator != null)
                 animator.SetBool(IsDeadHash, true);
+
             enabled = false;
         }
 
