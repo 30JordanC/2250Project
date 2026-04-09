@@ -14,7 +14,7 @@ public class NPCDialogue : MonoBehaviour, IInteractable
     public bool CanInteract() => true;
     public string GetInteractText() => "Press E to talk"; //using the E key to progress 
 
-    public void Interact()
+    public void Interact() //interact is called to cycle through 
     {
         if (!isOpen)
             OpenDialogue();
@@ -30,7 +30,7 @@ public class NPCDialogue : MonoBehaviour, IInteractable
         ShowNextLine();
     }
 
-    void ShowNextLine() //for multiple lines
+    void ShowNextLine() 
     {
         if (currentLine < dialogueLines.Length)
         {
@@ -45,7 +45,7 @@ public class NPCDialogue : MonoBehaviour, IInteractable
 
     void CloseDialogue()
     {
-        isOpen = false;
+        isOpen = false; //off at the start
         if (dialogueBox != null) dialogueBox.SetActive(false);
         dialogueText.text = "";
         currentLine = 0;

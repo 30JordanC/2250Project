@@ -14,20 +14,20 @@ public class KnightEnemy : MonoBehaviour
 
     void Start()
     {
-        agent = GetComponent<NavMeshAgent>();
+        agent = GetComponent<NavMeshAgent>(); //navmesh
         agent.speed = moveSpeed;
         if (patrolPoints.Length > 0)
             GoToNext();
     }
-
+//waypoints used for the guards
     void Update()
     {
-        if (patrolPoints.Length == 0) return;
-        if (!agent.isOnNavMesh) return; // safety check
+        if (patrolPoints.Length == 0) return; //checks if the guard has reached their current point
+        if (!agent.isOnNavMesh) return;
 
         if (waiting)
         {
-            waitTimer -= Time.deltaTime;
+            waitTimer -= Time.deltaTime; //waits
             if (waitTimer <= 0f)
             {
                 waiting = false;
@@ -36,7 +36,7 @@ public class KnightEnemy : MonoBehaviour
             return;
         }
 
-        if (!agent.pathPending && 
+        if (!agent.pathPending &&
             agent.remainingDistance <= agent.stoppingDistance + 0.1f)
         {
             waiting = true;
@@ -51,14 +51,12 @@ public class KnightEnemy : MonoBehaviour
         agent.SetDestination(patrolPoints[currentPoint].position);
     }
 
-    void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other) //player enters trigger and dies 
     {
-        if (other.CompareTag("Player"))
-        {
-            UnityEngine.SceneManagement.SceneManager
-                .LoadScene(
-                    UnityEngine.SceneManagement
-                    .SceneManager.GetActiveScene().name);
-        }
+        if (!other.CompareTag("Player")) return;
+        
+        Level3DeathUI deathUI = FindFirstObjectByType<Level3DeathUI>();
+        if (deathUI != null)
+            deathUI.ShowDeathScreen();
     }
 }
