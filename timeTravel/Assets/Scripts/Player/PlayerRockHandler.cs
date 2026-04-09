@@ -21,11 +21,15 @@ public class PlayerRockHandler : MonoBehaviour
     [SerializeField] private float groundRayHeight = 3f;
     [SerializeField] private float groundRayDistance = 10f;
 
+    [SerializeField] private GameObject pebbleText;
+
     private void Update()
     {
+        pebbleText.SetActive(IsHoldingPebble());
+        
         if (heldPebble == null)
             return;
-
+        
         if (Input.GetMouseButtonDown(0))
         {
             ThrowPebble();

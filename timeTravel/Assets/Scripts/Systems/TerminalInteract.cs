@@ -49,7 +49,6 @@ namespace Systems
 
             if (terminalMenuController == null)
             {
-                //Debug.LogError("TerminalMenuController not found on persistent terminal menu.");
                 return;
             }
 
