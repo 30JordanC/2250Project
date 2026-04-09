@@ -17858,8 +17858,8 @@ MonoBehaviour:
   - {fileID: 1479026934}
   leftDoor: {fileID: 978914157}
   rightDoor: {fileID: 2141971204}
-  leftOpenOffset: {x: 0, y: 0, z: 2}
-  rightOpenOffset: {x: 0, y: 0, z: -2}
+  leftOpenOffset: {x: 2, y: 0, z: 0}
+  rightOpenOffset: {x: -2, y: 0, z: 0}
   doorSpeed: 2
   lightsToActivate:
   - {fileID: 90371830}
@@ -21051,7 +21051,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7946360914446471443, guid: 3efa8d90dd1f53f40b51d953227468d6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.1
+      value: 0.52
       objectReference: {fileID: 0}
     - target: {fileID: 7946360914446471443, guid: 3efa8d90dd1f53f40b51d953227468d6, type: 3}
       propertyPath: m_LocalPosition.y
@@ -21059,7 +21059,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7946360914446471443, guid: 3efa8d90dd1f53f40b51d953227468d6, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.6
+      value: -3.88
       objectReference: {fileID: 0}
     - target: {fileID: 7946360914446471443, guid: 3efa8d90dd1f53f40b51d953227468d6, type: 3}
       propertyPath: m_LocalRotation.w
@@ -21092,13 +21092,59 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 108012326883433976, guid: 3efa8d90dd1f53f40b51d953227468d6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1678338034}
+    - targetCorrespondingSourceObject: {fileID: 108012326883433976, guid: 3efa8d90dd1f53f40b51d953227468d6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1678338033}
   m_SourcePrefab: {fileID: 100100000, guid: 3efa8d90dd1f53f40b51d953227468d6, type: 3}
 --- !u!4 &1678338031 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7946360914446471443, guid: 3efa8d90dd1f53f40b51d953227468d6, type: 3}
   m_PrefabInstance: {fileID: 1678338030}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1678338032 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 108012326883433976, guid: 3efa8d90dd1f53f40b51d953227468d6, type: 3}
+  m_PrefabInstance: {fileID: 1678338030}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1678338033
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1678338032}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3.5170395, y: 2.427627, z: 3.253425}
+  m_Center: {x: -2.051735, y: 0.1486163, z: 1.4031447}
+--- !u!114 &1678338034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1678338032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: affee341f81f7f14db1ad8c2d82f69fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObtainArtifact
+  interactText: Press E to pick up Central AI Memory Core
+  player: {fileID: 0}
 --- !u!114 &1683860963
 MonoBehaviour:
   m_ObjectHideFlags: 0
