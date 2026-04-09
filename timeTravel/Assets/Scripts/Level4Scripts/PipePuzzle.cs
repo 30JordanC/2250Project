@@ -3,21 +3,25 @@ using UnityEngine;
 public class PipePuzzle : MonoBehaviour
 {
     [Header("References")]
-    public PipeWallInteract wallInteract;
+    public PipeWallInteract wallInteract; //called when puzzle is successfully solved
 
     [Header("Grid Settings")]
-    public PipeTile[] tiles;
+    public PipeTile[] tiles; //all tiles in the grid, ordered from left to right, top to bottom, top left tile is tile 0
     public int gridWidth = 5;
     public int gridHeight = 5;
 
+    // adjacency[i] = { topIndex, rightIndex, bottomIndex, leftIndex }
+    //-1 equals off edge of grid
     private int[][] adjacency;
 
     private void Awake()
     {
-        BuildAdjacency();
+        BuildAdjacency(); //calculates all neighbours before tile logic runs
         foreach (var tile in tiles) tile.Init();
     }
 
+    //build the adjacencies for each tile
+    //each tile has 4 neighbour indices": top, right, bottom, left
     private void BuildAdjacency()
     {
         int count = gridWidth * gridHeight;
@@ -37,13 +41,18 @@ public class PipePuzzle : MonoBehaviour
         }
     }
 
+    //called by each PipeTile upon being clicked
     public void OnTileClicked(int tileIndex)
     {
         tiles[tileIndex].Rotate();
-        DebugConnections();
+        DebugConnections(); //logs state of all tiles in the grid after the action
         CheckWin();
     }
 
+
+    //failure conditions:
+    // 1. tile connects toward the edge of the grid
+    // 2. tile connects in a direction but not the same as its neighbour
     private void CheckWin()
     {
         for (int i = 0; i < tiles.Length; i++)
@@ -56,12 +65,14 @@ public class PipePuzzle : MonoBehaviour
                 bool iConnects         = tiles[i].Connects(dir);
                 bool neighbourConnects = neighbour >= 0 && tiles[neighbour].Connects(opposite);
 
+                //all pipes connecting off edge of grid invalid
                 if (iConnects && neighbour == -1)
                 {
                     Debug.Log($"❌ Tile {i} connects toward edge in dir {dir} — invalid");
                     return;
                 }
 
+                //if one side connects,the other must match
                 if (iConnects != neighbourConnects)
                 {
                     Debug.Log($"❌ Mismatch: Tile {i} dir {dir} = {iConnects} but neighbour {neighbour} opposite = {neighbourConnects}");
@@ -74,6 +85,7 @@ public class PipePuzzle : MonoBehaviour
         wallInteract.OnPuzzleSolved();
     }
 
+    //used for debugging, making sure puzzle actually closes when solved. 
     private void DebugConnections()
     {
         Debug.Log("--- Current Tile Connections ---");
