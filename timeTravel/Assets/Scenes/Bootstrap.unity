@@ -5342,7 +5342,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
   maxHealth: 100
-  currentHealth: 0
+  currentHealth: 100
   passiveHealRate: 5
   healthRegenDelay: 2
   deathUI: {fileID: 0}
@@ -5382,7 +5382,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Stamina
   maxStamina: 100
-  currentStamina: 0
+  currentStamina: 100
   sprintStaminaDrain: 15
   jumpStaminaDrain: 15
   staminaRegen: 20
