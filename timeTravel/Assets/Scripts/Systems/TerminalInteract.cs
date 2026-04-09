@@ -1,59 +1,54 @@
+using Cinemachine;
 using UnityEngine;
 
 namespace Systems
 {
     public class TerminalInteract : MonoBehaviour, IInteractable
     {
+        public GameObject terminalMenu;
         public bool menuIsOpen;
 
-        private PlayerReferences playerRefs;
-        private TerminalMenuController terminalMenuController;
+        public PlayerMovement playerMovement;
+        public FirstPersonCamera firstPersonCam;
+        public ThirdPersonCamera thirdPersonCam;
+        public CameraModeSwitcher cameraSwitcher;
 
+        public CinemachineInputProvider freeLookInputProvider;
+    
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
-            RefreshReferences();
+            terminalMenu.SetActive(false);
             menuIsOpen = false;
+        
         }
 
+        // Update is called once per frame
         void Update()
         {
-            if (playerRefs == null || terminalMenuController == null)
+            if (menuIsOpen && Input.GetKeyDown(KeyCode.Escape))
             {
-                RefreshReferences();
-            }
-
-            if (terminalMenuController != null)
-            {
-                menuIsOpen = terminalMenuController.gameObject.activeSelf;
-            }
-        }
-
-        void RefreshReferences()
-        {
-            playerRefs = FindFirstObjectByType<PlayerReferences>();
-
-            if (playerRefs != null && playerRefs.terminalMenu != null)
-            {
-                terminalMenuController = playerRefs.terminalMenu.GetComponent<TerminalMenuController>();
+                CloseMenu();
             }
         }
 
         public void Interact()
         {
             if (menuIsOpen) return;
-
-            if (terminalMenuController == null)
-            {
-                RefreshReferences();
-            }
-
-            if (terminalMenuController == null)
-            {
-                return;
-            }
-
-            terminalMenuController.OpenMenu();
+        
+            terminalMenu.SetActive(true);
             menuIsOpen = true;
+        
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+
+            playerMovement.StopMovement();
+            playerMovement.enabled = false;
+            firstPersonCam.canLook = false;
+            thirdPersonCam.canLook = false;
+            cameraSwitcher.canLook = false;
+   
+            freeLookInputProvider.enabled = false;
         }
 
         public bool CanInteract()
@@ -65,5 +60,58 @@ namespace Systems
         {
             return "Press E to time travel";
         }
+
+        public void CloseMenu() {
+            terminalMenu.SetActive(false);
+            menuIsOpen = false;
+        
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        
+            playerMovement.enabled = true;
+            firstPersonCam.canLook = true;
+            thirdPersonCam.canLook = true;
+            cameraSwitcher.canLook = true;
+
+            freeLookInputProvider.enabled = true;
+        }
+    
+        public void GoToLevel1()
+        {
+            CloseMenu();
+            SceneTransitionManager.Instance.LoadScene("Level 1", "Level1Spawn");
+        }
+    
+        public void GoToLevel2() 
+        {
+            CloseMenu();
+            SceneTransitionManager.Instance.LoadScene("Level 2_inside", "Level2Spawn");
+        }
+    
+        public void GoToLevel3() 
+        {
+            CloseMenu();
+            SceneTransitionManager.Instance.LoadScene("Level 3", "Level3Spawn");
+        }
+    
+        public void GoToLevel4() 
+        {
+            CloseMenu();
+            SceneTransitionManager.Instance.LoadScene("Level 4", "Level4Spawn");
+        }
+    
+        public void GoToLevel5() 
+        {
+            CloseMenu();
+            SceneTransitionManager.Instance.LoadScene("Level 5", "Level5Spawn");
+        }
+    
+        public void GoToLevel6() 
+        {
+            CloseMenu();
+            SceneTransitionManager.Instance.LoadScene("Level 6", "Level6Spawn");
+        }
+
+
     }
 }
