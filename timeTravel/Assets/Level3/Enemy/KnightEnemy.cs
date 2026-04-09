@@ -16,11 +16,15 @@ public class KnightEnemy : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         agent.speed = moveSpeed;
-        GoToNext();
+        if (patrolPoints.Length > 0)
+            GoToNext();
     }
 
     void Update()
     {
+        if (patrolPoints.Length == 0) return;
+        if (!agent.isOnNavMesh) return; // safety check
+
         if (waiting)
         {
             waitTimer -= Time.deltaTime;
@@ -33,7 +37,7 @@ public class KnightEnemy : MonoBehaviour
         }
 
         if (!agent.pathPending && 
-            agent.remainingDistance <= agent.stoppingDistance)
+            agent.remainingDistance <= agent.stoppingDistance + 0.1f)
         {
             waiting = true;
             waitTimer = waitTime;
@@ -43,7 +47,7 @@ public class KnightEnemy : MonoBehaviour
 
     void GoToNext()
     {
-        if (patrolPoints.Length == 0) return;
+        if (!agent.isOnNavMesh) return;
         agent.SetDestination(patrolPoints[currentPoint].position);
     }
 
