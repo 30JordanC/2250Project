@@ -5,12 +5,11 @@ public class ObtainArtifact : MonoBehaviour, IInteractable
     public string interactText = "Press E to pick up <artifactName>";
     public Transform player;
 
-    public bool isEgg = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -38,18 +37,7 @@ public class ObtainArtifact : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        Stealth stealth = player.GetComponent<Stealth>();
-        stealth.stealthAbilityUnlocked = true;
         SceneTransitionManager.Instance.LoadScene("IntroScene", "IntroSpawn");
 
-        if (isEgg)
-        {
-            StealthUnlockUI stealthUnlockUI = player.GetComponent<StealthUnlockUI>();
-            if (stealthUnlockUI != null)
-            {
-                stealthUnlockUI.ShowStealthUnlockPanel();
-            }
-        }
-        
     }
 }
