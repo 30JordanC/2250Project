@@ -8637,7 +8637,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a92d2787d55e741b0befc5a69c9b0017, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RespawnManager
-  currentCheckpoint: {fileID: 0}
+  currentCheckpoint: {fileID: 1845543296}
 --- !u!4 &1845543296
 Transform:
   m_ObjectHideFlags: 0
